@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -24,14 +25,7 @@ public class MenuDrinksActivity extends Activity {
     private static String TAG = "MenuDrinksActivity";
 
     private BaseAdapter mAdapter = new BaseAdapter() {
-        private OnClickListener mOnButtonClicked = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MenuDrinksActivity.this,MenuOneProductActivity.class);
-                i.putExtra("id",0);
-                startActivity(i);
-            }
-        };
+
         @Override
         public int getCount() {
             return (mApp.getMenue().getmProductsCategory()).size();
@@ -56,7 +50,6 @@ public class MenuDrinksActivity extends Activity {
             Log.i(TAG, "categoryName = " + (mApp.getMenue().getmProductsCategory()).get(position).getmName());
             ImageView categoryImage =(ImageView)returnedValue.findViewById(R.id.drinksOneItemImageView);
             categoryImage.setImageBitmap(Utils.getBitmapFromStorage((mApp.getMenue().getmProductsCategory()).get(position).getmPicName()));
-            returnedValue.setOnClickListener(mOnButtonClicked);
             return returnedValue;
 
         }
@@ -69,6 +62,14 @@ public class MenuDrinksActivity extends Activity {
         mApp =  AlwarshaApp.getInstance();
         ListView drinksListView = (ListView) findViewById(R.id.drinksListView);
         drinksListView.setAdapter(mAdapter);
+        drinksListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(MenuDrinksActivity.this,MenuOneProductActivity.class);
+                intent.putExtra("id",i);
+                startActivity(intent);
+            }
+        });
     }
 
 }

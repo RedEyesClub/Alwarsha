@@ -11,5 +11,7 @@
     <string name="title_activity_menu_main">MenuMainActivity</string>
     <string name="title_activity_menu_drinks">MenuDrinksActivity</string>
     <string name="title_activity_menu_one_product">MenuOneProductActivity</string>
+    <string name="title_activity_main_deal">MainDealActivity</string>
+    <string name="title_activity_deal">DealActivity</string>
 
 </resources>

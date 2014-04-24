@@ -23,4 +23,11 @@ public class MainActivity extends Activity {
         finish();
     }
 
+    public void table1Click(View table1Button){
+        Intent i = new Intent(MainActivity.this,DealActivity.class);
+        i.putExtra("dealName","Table_01");
+        startActivity(i);
+        finish();
+    }
+
 }

@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -32,7 +33,7 @@ public class MenuOneProductActivity extends Activity {
         };
         @Override
         public int getCount() {
-            return (mApp.getMenue().getmProductsCategory()).size();
+            return (mApp.getMenue().getmProductsCategory()).get(mCategoryId).getmProductsList().size();
         }
 
         @Override

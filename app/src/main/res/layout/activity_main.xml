@@ -23,7 +23,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Table 1"
-            android:id="@+id/table1Button" />
+            android:id="@+id/table1Button"
+            android:onClick="table1Click"/>
 
         <Button
             android:layout_width="wrap_content"

@@ -6,15 +6,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-<<<<<<< HEAD
-=======
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
->>>>>>> a0da6cbdad894f627e931344566b2d9b900ce704
 import android.widget.TextView;
 
 import com.alwarsha.app.AlwarshaApp;

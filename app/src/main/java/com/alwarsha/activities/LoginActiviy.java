@@ -5,14 +5,14 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
 import com.alwarsha.app.R;
 import com.alwarsha.app.StaffMember;
 import com.alwarsha.data.StaffMembersProvider;
+import com.alwarsha.utils.Utils;
 
 public class LoginActiviy extends Activity {
     private Button loginButton;
@@ -46,6 +46,17 @@ public class LoginActiviy extends Activity {
 
             }
         });
+        StaffMembersProvider mStaffMembersProvider = StaffMembersProvider.getInstace(this);
+        if(mStaffMembersProvider.StaffMemeber_initDataBase(Utils.getFileFromStorage("Staff.xml")) == false)
+        {
+            AlertDialog errorAlert = new AlertDialog.Builder(this)
+                    .setTitle("Error").setMessage("Staff Members XML")
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).show();
+        }
     }
 
     private void checkCredintials(final String username, final String password) {

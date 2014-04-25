@@ -1,16 +1,22 @@
 package com.alwarsha.data;
 
-import java.util.ArrayList;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.alwarsha.app.AlwarshaApp;
 import com.alwarsha.app.StaffMember;
+
+import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Root;
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -24,6 +30,17 @@ public class StaffMembersProvider {
 
 	private DatabaseHelper mDbHelper;
 	private Context mContext;
+
+    @Root (name="StaffMembers")
+    public static class StaffMembers{
+        @ElementList (name="members")
+        public ArrayList<StaffMember> members;
+
+        public StaffMembers()
+        {
+            members = new ArrayList<StaffMember>();
+        }
+    }
 
 	// Singleton
 	private static StaffMembersProvider sInstace = null;
@@ -89,4 +106,45 @@ public class StaffMembersProvider {
 		}
 		return member;
 	}
+
+    public void StaffMemeber_deleteDB()
+    {
+        SQLiteDatabase db = null;
+        try{
+            db = mDbHelper.getWritableDatabase();
+            db.delete(DatabaseHelper.TABLE_STAFF_MEMBERS, null, null);
+
+        }catch (NullPointerException e){
+            if(AlwarshaApp.DEBUG)
+                Log.e(TAG,"Exception at delete StaffMembers Table" );
+        }
+    }
+
+    public boolean StaffMemeber_initDataBase(File xml_file)
+    {
+        if (xml_file.exists() == false) {
+            return false;
+        }
+
+        Serializer serializer = new Persister();
+        StaffMembers staff_members = new StaffMembers();
+        try {
+            staff_members = serializer.read(StaffMembers.class, xml_file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if(staff_members == null)
+        {
+            return false;
+        }
+
+        StaffMemeber_deleteDB();
+
+        for(StaffMember sm : staff_members.members)
+        {
+            insertNewStaffMember(sm);
+        }
+        return true;
+    }
 }

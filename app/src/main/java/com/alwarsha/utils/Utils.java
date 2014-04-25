@@ -36,4 +36,16 @@ public class Utils {
         }
         return deviceBitmap;
     }
+
+    public static File getFileFromStorage(String fileName) {
+        Bitmap image = null;
+        String deviceImageInSD = Environment.getExternalStorageDirectory()
+                .toString()
+                + File.separator + "MyDir" + File.separator
+                + fileName;
+
+        File deviceFile = new File(deviceImageInSD);
+
+        return deviceFile;
+    }
 }

@@ -1,14 +1,28 @@
 package com.alwarsha.app;
 
+import org.simpleframework.xml.Element;
+
 /**
  * Created by Farid on 4/18/14.
  */
+@Element (name="StaffMember")
 public class StaffMember {
-
+    @Element (name="name")
     private String name;
+    @Element (name="id")
     private String id;
+    @Element (name="status")
     private String status;
+    @Element (name="password")
     private String password;
+
+    public StaffMember()
+    {
+        this.status = "";
+        this.password = "";
+        this.id = "";
+        this.name = "";
+    }
 
     public StaffMember(String status, String name, String password) {
         this.status = status;

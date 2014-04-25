@@ -1,9 +1,14 @@
 package com.alwarsha.app;
 
+import android.app.AlertDialog;
 import android.app.Application;
+import android.content.DialogInterface;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.alwarsha.app.StaffMember;
+import com.alwarsha.data.StaffMembersProvider;
 
 /**
  * Created by Farid on 4/19/14.
@@ -13,11 +18,13 @@ public class AlwarshaApp extends Application {
     private Menu mMenue;
     private static AlwarshaApp ourInstance = new AlwarshaApp();
 
+
     public static AlwarshaApp getInstance() {
         return ourInstance;
     }
 
     private AlwarshaApp() {
+
         List<Product> beersList = new ArrayList<Product>();
         beersList.add(new Product(0, "Calsberg 1/3", "calsberg1_3", 20));
         beersList.add(new Product(1, "Tuborg 1/3", "tuborg_g_1_3", 20));

@@ -17,6 +17,15 @@ public class AlwarshaApp extends Application {
     public static boolean DEBUG = true;
     private Menu mMenue;
     private static AlwarshaApp ourInstance = new AlwarshaApp();
+    private List<Deal> dealsList = new ArrayList<Deal>();
+
+    public List<Deal> getDealsList() {
+        return dealsList;
+    }
+
+    public void setDealsList(List<Deal> dealsList) {
+        this.dealsList = dealsList;
+    }
 
 
     public static AlwarshaApp getInstance() {
@@ -46,6 +55,8 @@ public class AlwarshaApp extends Application {
         productsCategoryList.add(hotDrinks);
         productsCategoryList.add(alcohol);
         productsCategoryList.add(softdrinks);
+
+
 
         mMenue = new Menu(productsCategoryList);
     }

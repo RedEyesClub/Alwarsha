@@ -24,25 +24,28 @@
             android:layout_height="wrap_content"
             android:text="Table 1"
             android:id="@+id/table1Button"
-            android:onClick="table1Click"/>
+            android:onClick="tableClick"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Table 2"
-            android:id="@+id/table2Button" />
+            android:id="@+id/table2Button"
+            android:onClick="tableClick"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Table 3"
-            android:id="@+id/table3Button" />
+            android:id="@+id/table3Button"
+            android:onClick="tableClick"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Table 4"
-            android:id="@+id/table4Button" />
+            android:id="@+id/table4Button"
+            android:onClick="tableClick"/>
     </LinearLayout>
 
     <LinearLayout

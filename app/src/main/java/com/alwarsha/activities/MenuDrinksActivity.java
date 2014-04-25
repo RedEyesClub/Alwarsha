@@ -23,6 +23,7 @@ public class MenuDrinksActivity extends Activity {
 
     public AlwarshaApp mApp;
     private static String TAG = "MenuDrinksActivity";
+    private String mSender;
 
     private BaseAdapter mAdapter = new BaseAdapter() {
 
@@ -59,6 +60,11 @@ public class MenuDrinksActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_drinks);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            mSender = extras.getString("sender");
+        }
         mApp =  AlwarshaApp.getInstance();
         ListView drinksListView = (ListView) findViewById(R.id.drinksListView);
         drinksListView.setAdapter(mAdapter);
@@ -67,9 +73,16 @@ public class MenuDrinksActivity extends Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(MenuDrinksActivity.this,MenuOneProductActivity.class);
                 intent.putExtra("id",i);
+                if(mSender!=null)
+                    intent.putExtra("sender", mSender);
                 startActivity(intent);
             }
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

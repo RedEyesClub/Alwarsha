@@ -13,5 +13,6 @@
     <string name="title_activity_menu_one_product">MenuOneProductActivity</string>
     <string name="title_activity_main_deal">MainDealActivity</string>
     <string name="title_activity_deal">DealActivity</string>
+    <string name="orders">Orders</string>
 
 </resources>

@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.alwarsha.app.AlwarshaApp;
+import com.alwarsha.app.Product;
 import com.alwarsha.app.R;
 import com.alwarsha.utils.Utils;
 
@@ -23,12 +24,15 @@ public class MenuOneProductActivity extends Activity {
     public AlwarshaApp mApp;
     private static String TAG = "MenuOneProductActivity";
     private int mCategoryId;
+    private String mSender;
 
     private BaseAdapter mAdapter = new BaseAdapter() {
         private View.OnClickListener mOnButtonClicked = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(mSender != null){
+                    mApp.getDealsList().get(0).getmProducts().put(new Product(0, "Calsberg 1/3", "calsberg1_3", 20), 1);
+                }
             }
         };
         @Override
@@ -54,7 +58,7 @@ public class MenuOneProductActivity extends Activity {
             productName.setText((mApp.getMenue().getmProductsCategory()).get(mCategoryId).getmProductsList().get(position).getmName());
             ImageView productImage =(ImageView)returnedValue.findViewById(R.id.productOneItemImageView);
             productImage.setImageBitmap(Utils.getBitmapFromStorage((mApp.getMenue().getmProductsCategory()).get(mCategoryId).getmProductsList().get(position).getmPictureName()));
-           // returnedValue.setOnClickListener(mOnButtonClicked);
+            returnedValue.setOnClickListener(mOnButtonClicked);
             return returnedValue;
 
         }
@@ -68,7 +72,10 @@ public class MenuOneProductActivity extends Activity {
 
         if (extras != null) {
             mCategoryId = extras.getInt("id");
+            mSender = extras.getString("sender");
         }
+
+
         mApp =  AlwarshaApp.getInstance();
         ListView drinksListView = (ListView) findViewById(R.id.oneProductListView);
         drinksListView.setAdapter(mAdapter);

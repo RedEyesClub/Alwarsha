@@ -42,7 +42,10 @@ public class LoginActiviy extends Activity {
             public void onClick(View view) {
                 username = usernameEditText.getText().toString();
                 password = passwordEditText.getText().toString();
-                checkCredintials(username,password);
+               // checkCredintials(username,password);
+                Intent i = new Intent(LoginActiviy.this,MainActivity.class);
+                startActivity(i);
+                finish();
 
             }
         });

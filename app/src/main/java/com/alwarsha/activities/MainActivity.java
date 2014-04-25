@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import com.alwarsha.app.R;
 
@@ -23,9 +24,11 @@ public class MainActivity extends Activity {
         finish();
     }
 
-    public void table1Click(View table1Button){
+    public void tableClick(View tableButton){
         Intent i = new Intent(MainActivity.this,DealActivity.class);
-        i.putExtra("dealName","Table_01");
+        Button b = (Button)tableButton;
+        String buttonText = b.getText().toString();
+        i.putExtra("dealName",buttonText);
         startActivity(i);
         finish();
     }

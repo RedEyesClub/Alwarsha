@@ -44,6 +44,15 @@ public class Deal {
         return id;
     }
 
+    public boolean addProduct(Product product){
+        Integer r = mProducts.get(product);
+        if(r!= null){
+            mProducts.put(product, mProducts.get(product) + 1);
+        }else{
+            mProducts.put(product,1);
+        }
+        return true;
+    }
     public void setId(int id) {
         this.id = id;
     }

@@ -30,7 +30,7 @@ public class MenuOneProductActivity extends Activity {
                     TextView product = (TextView)v.findViewById(R.id.productId);
                     int position  = Integer.valueOf(product.getText().toString());
                     Product p = (mApp.getMenue().getmProductsCategory()).get(mCategoryId).getmProductsList().get(position);
-                    mApp.getDealsList().get(0).getmProducts().put(p, 1);
+                    mApp.getDealsList().get(0).addProduct(p);
                 }
             }
         };

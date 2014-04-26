@@ -27,7 +27,10 @@ public class MenuOneProductActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if(mSender != null){
-                    mApp.getDealsList().get(0).getmProducts().put(new Product(0, "Calsberg 1/3", "calsberg1_3", 20), 1);
+                    TextView product = (TextView)v.findViewById(R.id.productId);
+                    int position  = Integer.valueOf(product.getText().toString());
+                    Product p = (mApp.getMenue().getmProductsCategory()).get(mCategoryId).getmProductsList().get(position);
+                    mApp.getDealsList().get(0).getmProducts().put(p, 1);
                 }
             }
         };
@@ -50,6 +53,8 @@ public class MenuOneProductActivity extends Activity {
         public View getView(int position, View convertView, ViewGroup parent) {
             View returnedValue;
             returnedValue = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_item, null);
+            TextView productIdTextView = (TextView)returnedValue.findViewById(R.id.productId);
+            productIdTextView.setText(String.valueOf(position));
             TextView productName = (TextView)returnedValue.findViewById(R.id.producrOneItemNameTextView);
             productName.setText((mApp.getMenue().getmProductsCategory()).get(mCategoryId).getmProductsList().get(position).getmName());
             ImageView productImage =(ImageView)returnedValue.findViewById(R.id.productOneItemImageView);

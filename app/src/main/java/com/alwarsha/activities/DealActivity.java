@@ -8,6 +8,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -26,7 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DealActivity extends Activity {
+public class DealActivity extends BaseActivity {
 
     private String mDealNameId;
     private HashMap<Product,Integer> mProducts = new HashMap<Product, Integer>();
@@ -75,6 +77,7 @@ public class DealActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         TextView deal_name;
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deal);
         mApp = AlwarshaApp.getInstance();
@@ -130,4 +133,7 @@ public class DealActivity extends Activity {
         startActivity(i);
     }
 
+    public void closeClicked(View closeButton){
+        finish();
+    }
 }

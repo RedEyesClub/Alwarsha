@@ -19,7 +19,7 @@ import com.alwarsha.utils.Utils;
 
 
 
-public class MenuDrinksActivity extends Activity {
+public class MenuDrinksActivity extends BaseActivity {
 
     public AlwarshaApp mApp;
     private static String TAG = "MenuDrinksActivity";
@@ -78,11 +78,5 @@ public class MenuDrinksActivity extends Activity {
                 startActivity(intent);
             }
         });
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
     }
 }

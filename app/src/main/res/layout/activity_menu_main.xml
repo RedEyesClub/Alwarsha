@@ -2,30 +2,60 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.alwarsha.activities.MenuMainActivity">
 
 
-    <Button
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Kitchen"
-        android:id="@+id/menuMainKitchenbutton"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:id="@+id/kitchenLayout">
 
-    <Button
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView2"
+            android:src="@drawable/bar"
+            android:onClick="drinksClick"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/drinksOneItemTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imageView2"
+            android:text="Bar"
+            android:textSize="30sp"
+            android:gravity="center"
+            android:background="#80000000"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"/>
+    </RelativeLayout>
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Drinks"
-        android:id="@+id/menuMainDrinksbutton"
-        android:layout_below="@+id/menuMainKitchenbutton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:onClick="drinksClick"
-        android:layout_marginTop="80dp" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/kitchenLayout">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/kitchen"
+            android:layout_alignParentBottom="true" />
+
+        <TextView
+            android:id="@+id/drinksOneItemTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="Kitchen"
+            android:textSize="30sp"
+            android:gravity="center"
+            android:background="#80000000"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"/>
+    </RelativeLayout>
 </RelativeLayout>

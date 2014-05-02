@@ -3,7 +3,16 @@
 
     <string name="app_name">الورشة</string>
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">اعدادات</string>
     <string name="username">اسم المستخدم</string>
+    <string name="password">كلمة السر</string>
+    <string name="login">دخول</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_menu_main">MenuMainActivity</string>
+    <string name="title_activity_menu_drinks">MenuDrinksActivity</string>
+    <string name="title_activity_menu_one_product">MenuOneProductActivity</string>
+    <string name="title_activity_main_deal">MainDealActivity</string>
+    <string name="title_activity_deal">DealActivity</string>
+    <string name="orders">طلبيات</string>
 
 </resources>

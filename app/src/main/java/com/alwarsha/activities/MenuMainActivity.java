@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.alwarsha.app.R;
 
-public class MenuMainActivity extends Activity {
+public class MenuMainActivity extends BaseActivity {
 
     private String mSender;
     @Override
@@ -25,6 +25,11 @@ public class MenuMainActivity extends Activity {
         if(mSender != null)
             i.putExtra("sender",mSender);
         startActivity(i);
+    }
+
+    @Override
+    public void onBackPressed() {
         finish();
+        super.onBackPressed();
     }
 }

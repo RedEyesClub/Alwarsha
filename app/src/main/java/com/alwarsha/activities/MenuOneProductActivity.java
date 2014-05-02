@@ -15,7 +15,7 @@ import com.alwarsha.app.Product;
 import com.alwarsha.app.R;
 import com.alwarsha.utils.Utils;
 
-public class MenuOneProductActivity extends Activity {
+public class MenuOneProductActivity extends BaseActivity {
 
     public AlwarshaApp mApp;
     private static String TAG = "MenuOneProductActivity";
@@ -82,5 +82,9 @@ public class MenuOneProductActivity extends Activity {
         drinksListView.setAdapter(mAdapter);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 
 }

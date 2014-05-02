@@ -8,23 +8,27 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import java.util.Locale;
 
 import com.alwarsha.app.R;
 import com.alwarsha.app.StaffMember;
 import com.alwarsha.data.StaffMembersProvider;
 import com.alwarsha.utils.Utils;
 
-public class LoginActiviy extends Activity {
+public class LoginActiviy extends BaseActivity  {
     private Button loginButton;
     private EditText usernameEditText;
     private EditText passwordEditText;
     private String username;
     private String password;
+
+
     private StaffMembersProvider mProvider;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_activiy);
+        Locale.setDefault(new Locale("ar","EG"));
 
         StaffMember member = new StaffMember("kalb","saher","xxx");
 
@@ -42,8 +46,8 @@ public class LoginActiviy extends Activity {
             public void onClick(View view) {
                 username = usernameEditText.getText().toString();
                 password = passwordEditText.getText().toString();
-               // checkCredintials(username,password);
-                Intent i = new Intent(LoginActiviy.this,MainActivity.class);
+                //checkCredintials(username,password);
+               Intent i = new Intent(LoginActiviy.this,MainActivity.class);
                 startActivity(i);
                 finish();
 

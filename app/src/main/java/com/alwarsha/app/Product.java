@@ -1,17 +1,25 @@
 package com.alwarsha.app;
 
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
+
+import java.util.HashMap;
+
 /**
  * Created by Farid on 4/19/14.
  */
 public class Product {
     private int mId;
-    private String mName;
+    private HashMap<String, String> mName;
+    private int mCategoryId;
     private String mPictureName;
     private float mPrice;
 
-    public Product(int mId, String mName, String mPictureName, float mPrice) {
+    public Product(int mId, String mName, int mCategoryId, String mPictureName, float mPrice, String language) {
         this.mId = mId;
-        this.mName = mName;
+        this.mName = new HashMap<String, String>();
+        this.mName.put(language,mName);
+        this.mCategoryId = mCategoryId;
         this.mPictureName = mPictureName;
         this.mPrice = mPrice;
     }
@@ -24,12 +32,12 @@ public class Product {
         this.mId = mId;
     }
 
-    public String getmName() {
-        return mName;
+    public String getmName(String lang) {
+        return mName.get(lang);
     }
 
-    public void setmName(String mName) {
-        this.mName = mName;
+    public void setmName(String mName, String lang) {
+        this.mName.put(lang,mName);
     }
 
     public String getmPictureName() {
@@ -48,5 +56,15 @@ public class Product {
         this.mPrice = mPrice;
     }
 
+    public int getmCategoryId() {
+        return mCategoryId;
+    }
 
+    public void setmCategoryId(int mCategoryId) {
+        this.mCategoryId = mCategoryId;
+    }
+
+    public void addName(String lang, String name) {
+        this.mName.put(lang, name);
+    }
 }

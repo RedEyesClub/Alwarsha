@@ -10,7 +10,7 @@ public class StaffMember {
     @Element (name="name")
     private String name;
     @Element (name="id")
-    private String id;
+    private int id;
     @Element (name="status")
     private String status;
     @Element (name="password")
@@ -20,7 +20,7 @@ public class StaffMember {
     {
         this.status = "";
         this.password = "";
-        this.id = "";
+        this.id = 0;
         this.name = "";
     }
 
@@ -34,7 +34,7 @@ public class StaffMember {
         return name;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -50,7 +50,7 @@ public class StaffMember {
         this.name = name;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

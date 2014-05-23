@@ -1,6 +1,7 @@
 package com.alwarsha.app;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -9,23 +10,16 @@ import java.util.List;
 public class ProductCategory {
 
     private int mId;
-    private String mName;
+    private int mGroupId;
+    private HashMap<String,String> mName;
     private String mPicName;
-    private List<Product> mProductsList = new ArrayList<Product>();
 
-    public ProductCategory(int mId, String mName, String mPicName, List<Product> mProductsList) {
+    public ProductCategory(int mId, int mGroupId, String mName, String mPicName, String lang) {
         this.mId = mId;
-        this.mName = mName;
+        this.mGroupId = mGroupId;
+        this.mName = new HashMap<String, String>();
+        this.mName.put(lang,mName);
         this.mPicName = mPicName;
-        this.mProductsList = mProductsList;
-    }
-
-    public List<Product> getmProductsList() {
-        return mProductsList;
-    }
-
-    public void setmProductsList(List<Product> mProductsList) {
-        this.mProductsList = mProductsList;
     }
 
     public int getmId() {
@@ -36,12 +30,20 @@ public class ProductCategory {
         this.mId = mId;
     }
 
-    public String getmName() {
-        return mName;
+    public int getmGroupId() {
+        return mGroupId;
     }
 
-    public void setmName(String mName) {
-        this.mName = mName;
+    public void setmGroupId(int mGroupId) {
+        this.mGroupId = mGroupId;
+    }
+
+    public String getmName(String lang) {
+        return mName.get(lang);
+    }
+
+    public void setmName(String mName,String lang) {
+        this.mName.put(lang,mName);
     }
 
     public String getmPicName() {
@@ -52,6 +54,7 @@ public class ProductCategory {
         this.mPicName = mPicName;
     }
 
-
-
+    public void addName(String lang, String name) {
+        this.mName.put(lang, name);
+    }
 }

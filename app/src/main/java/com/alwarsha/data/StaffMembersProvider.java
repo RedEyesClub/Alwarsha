@@ -16,8 +16,6 @@ import org.simpleframework.xml.core.Persister;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
-
 
 
 public class StaffMembersProvider {
@@ -55,7 +53,7 @@ public class StaffMembersProvider {
 	private StaffMembersProvider(Context context) {
 		super();
 		mContext = context;
-		mDbHelper = DatabaseHelper.getInstance(mContext);
+		mDbHelper = DatabaseHelper.getInstance(mContext.getApplicationContext());
 	}
 
 	public void close() {
@@ -74,7 +72,7 @@ public class StaffMembersProvider {
 //		}
 		SQLiteDatabase db = mDbHelper.getWritableDatabase();
 		ContentValues cv = new ContentValues();
-		//cv.put(DatabaseHelper.TABLE_STAFF_MEMBERS_ID, member.getId());
+		cv.put(DatabaseHelper.TABLE_STAFF_MEMBERS_ID, member.getId());
 		cv.put(DatabaseHelper.TABLE_STAFF_MEMBERS_NAME, member.getName());
 		cv.put(DatabaseHelper.TABLE_STAFF_MEMBERS_PASSWORD, member.getPassword());
 		cv.put(DatabaseHelper.TABLE_STAFF_MEMBERS_STATUS, member.getStatus());
@@ -118,33 +116,5 @@ public class StaffMembersProvider {
             if(AlwarshaApp.DEBUG)
                 Log.e(TAG,"Exception at delete StaffMembers Table" );
         }
-    }
-
-    public boolean StaffMemeber_initDataBase(File xml_file)
-    {
-        if (xml_file.exists() == false) {
-            return false;
-        }
-
-        Serializer serializer = new Persister();
-        StaffMembers staff_members = new StaffMembers();
-        try {
-            staff_members = serializer.read(StaffMembers.class, xml_file);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if(staff_members == null)
-        {
-            return false;
-        }
-
-        StaffMemeber_deleteDB();
-
-        for(StaffMember sm : staff_members.members)
-        {
-            insertNewStaffMember(sm);
-        }
-        return true;
     }
 }

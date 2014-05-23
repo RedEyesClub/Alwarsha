@@ -1,25 +1,26 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.alwarsha.activities.MenuMainActivity">
+    tools:context="com.alwarsha.activities.MenuMainActivity"
+    android:orientation="vertical">
 
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/kitchenLayout">
+        android:layout_height="500dp"
+        android:layout_alignParentTop="true"
+        android:id="@+id/kitchenLayout"
+        android:layout_weight="1">
 
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="500dp"
             android:id="@+id/imageView2"
             android:src="@drawable/bar"
             android:onClick="drinksClick"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"/>
 
         <TextView
             android:id="@+id/drinksOneItemTextView"
@@ -32,19 +33,12 @@
             android:background="#80000000"
             android:textColor="@android:color/white"
             android:textStyle="bold"/>
+
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/kitchenLayout">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageView"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/kitchen"
-            android:layout_alignParentBottom="true" />
+        android:layout_height="500dp"
+        android:layout_weight="1">
 
         <TextView
             android:id="@+id/drinksOneItemTextView"
@@ -57,5 +51,16 @@
             android:background="#80000000"
             android:textColor="@android:color/white"
             android:textStyle="bold"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:id="@+id/imageView"
+            android:src="@drawable/kitchen"
+            android:layout_above="@+id/drinksOneItemTextView"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"/>
     </RelativeLayout>
-</RelativeLayout>
+</LinearLayout>

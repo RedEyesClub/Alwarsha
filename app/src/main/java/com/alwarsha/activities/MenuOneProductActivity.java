@@ -1,6 +1,5 @@
 package com.alwarsha.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +8,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alwarsha.app.AlwarshaApp;
+import com.alwarsha.app.DealProduct;
 import com.alwarsha.app.Product;
 import com.alwarsha.app.R;
 import com.alwarsha.utils.Utils;
@@ -21,6 +22,7 @@ public class MenuOneProductActivity extends BaseActivity {
     private static String TAG = "MenuOneProductActivity";
     private int mCategoryId;
     private String mSender;
+    private String mDealNameId ="0";
 
     private BaseAdapter mAdapter = new BaseAdapter() {
         private View.OnClickListener mOnButtonClicked = new View.OnClickListener() {
@@ -30,7 +32,9 @@ public class MenuOneProductActivity extends BaseActivity {
                     TextView product = (TextView)v.findViewById(R.id.productId);
                     int position  = Integer.valueOf(product.getText().toString());
                     Product p = (mApp.getMenue().getmProductsCategory()).get(mCategoryId).getmProductsList().get(position);
-                    mApp.getDealsList().get(0).addProduct(p);
+                    DealProduct dp = new DealProduct(p, DealProduct.DealProductStatus.ORDERED);
+                    mApp.getDealsList().get(Integer.valueOf(mDealNameId)).addProduct(dp);
+                    Toast.makeText(MenuOneProductActivity.this,dp.getName() + " Added",Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -56,7 +60,7 @@ public class MenuOneProductActivity extends BaseActivity {
             TextView productIdTextView = (TextView)returnedValue.findViewById(R.id.productId);
             productIdTextView.setText(String.valueOf(position));
             TextView productName = (TextView)returnedValue.findViewById(R.id.producrOneItemNameTextView);
-            productName.setText((mApp.getMenue().getmProductsCategory()).get(mCategoryId).getmProductsList().get(position).getmName());
+            productName.setText((mApp.getMenue().getmProductsCategory()).get(mCategoryId).getmProductsList().get(position).getName());
             ImageView productImage =(ImageView)returnedValue.findViewById(R.id.productOneItemImageView);
             productImage.setImageBitmap(Utils.getBitmapFromStorage((mApp.getMenue().getmProductsCategory()).get(mCategoryId).getmProductsList().get(position).getmPictureName()));
             returnedValue.setOnClickListener(mOnButtonClicked);
@@ -64,6 +68,7 @@ public class MenuOneProductActivity extends BaseActivity {
 
         }
     };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +79,7 @@ public class MenuOneProductActivity extends BaseActivity {
         if (extras != null) {
             mCategoryId = extras.getInt("id");
             mSender = extras.getString("sender");
+            mDealNameId = extras.getString("dealId");
         }
 
 

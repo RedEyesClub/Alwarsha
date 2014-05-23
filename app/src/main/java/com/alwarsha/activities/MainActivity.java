@@ -33,7 +33,7 @@ public class MainActivity extends BaseActivity {
                     Intent i = new Intent(MainActivity.this,DealActivity.class);
                     // Button b = (Button)tableButton;
                     // String buttonText = b.getText().toString();
-                    i.putExtra("dealName"," " + position);
+                    i.putExtra("dealName", String.valueOf(position));
                     startActivity(i);
                 }
             }

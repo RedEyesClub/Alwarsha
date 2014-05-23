@@ -23,6 +23,7 @@ public class MenuDrinksActivity extends BaseActivity {
 
     public AlwarshaApp mApp;
     private static String TAG = "MenuDrinksActivity";
+    private String mDealNameId;
     private String mSender;
 
     private BaseAdapter mAdapter = new BaseAdapter() {
@@ -56,6 +57,7 @@ public class MenuDrinksActivity extends BaseActivity {
         }
     };
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +66,7 @@ public class MenuDrinksActivity extends BaseActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             mSender = extras.getString("sender");
+            mDealNameId = extras.getString("dealId");
         }
         mApp =  AlwarshaApp.getInstance();
         ListView drinksListView = (ListView) findViewById(R.id.drinksListView);
@@ -73,8 +76,10 @@ public class MenuDrinksActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(MenuDrinksActivity.this,MenuOneProductActivity.class);
                 intent.putExtra("id",i);
-                if(mSender!=null)
+                if(mSender!=null){
                     intent.putExtra("sender", mSender);
+                    intent.putExtra("dealId", mDealNameId);
+                }
                 startActivity(intent);
             }
         });

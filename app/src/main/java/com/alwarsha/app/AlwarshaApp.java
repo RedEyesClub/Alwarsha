@@ -18,6 +18,7 @@ public class AlwarshaApp extends Application {
     private Menu mMenue;
     private static AlwarshaApp ourInstance = new AlwarshaApp();
     private List<Deal> dealsList = new ArrayList<Deal>();
+    public static  StaffMember m;
 
     public List<Deal> getDealsList() {
         return dealsList;

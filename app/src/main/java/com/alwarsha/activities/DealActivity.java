@@ -1,27 +1,31 @@
 package com.alwarsha.activities;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.alwarsha.app.AlwarshaApp;
 import com.alwarsha.app.Deal;
+import com.alwarsha.app.DealProduct;
 import com.alwarsha.app.Product;
 import com.alwarsha.app.R;
 import com.alwarsha.utils.Utils;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,11 +35,19 @@ import java.util.Map;
 public class DealActivity extends BaseActivity {
 
     private String mDealNameId;
-    private HashMap<Product,Integer> mProducts = new HashMap<Product, Integer>();
+    private HashMap<DealProduct,Integer> mProducts = new HashMap<DealProduct, Integer>();
     private Deal deal;
     private int mTotal;
     private int mTotalDis;
     private AlwarshaApp mApp;
+    private Socket client;
+    private FileInputStream fileInputStream;
+    private ByteArrayInputStream bufferedInputStream;
+    private OutputStream outputStream;
+    private String mOrdersToSend = "";
+    TextView mTotalTextView;
+    TextView mTotalDisTextView;
+    ListView mProductListView;
 
     private BaseAdapter mAdapter = new BaseAdapter() {
         private View.OnClickListener mOnButtonClicked = new View.OnClickListener() {
@@ -65,7 +77,7 @@ public class DealActivity extends BaseActivity {
             returnedValue = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_item, null);
             TextView productName = (TextView)returnedValue.findViewById(R.id.producrOneItemNameTextView);
             List keys = new ArrayList(mProducts.keySet());
-            productName.setText(((Product) (keys.get(position))).getmName());
+            productName.setText(((Product) (keys.get(position))).getName());
             ImageView productImage =(ImageView)returnedValue.findViewById(R.id.productOneItemImageView);
             productImage.setImageBitmap(Utils.getBitmapFromStorage(((Product)(keys.get(position))).getmPictureName()));
             TextView count = (TextView)returnedValue.findViewById(R.id.countTextView);
@@ -80,6 +92,10 @@ public class DealActivity extends BaseActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deal);
+        mTotalTextView = (TextView)findViewById(R.id.totalTextView);
+        mTotalDisTextView = (TextView)findViewById(R.id.totalDisTextView);
+        mProductListView = (ListView) findViewById(R.id.deal_one_product_listView);
+
         mApp = AlwarshaApp.getInstance();
         Bundle extras = getIntent().getExtras();
 
@@ -94,8 +110,7 @@ public class DealActivity extends BaseActivity {
 
     @Override
     protected void onResume() {
-        TextView totalTextView = (TextView)findViewById(R.id.totalTextView);
-        TextView totalDisTextView = (TextView)findViewById(R.id.totalDisTextView);
+
         int total = 0;
 
         for(Deal l : mApp.getDealsList() ){
@@ -110,20 +125,24 @@ public class DealActivity extends BaseActivity {
             mApp.getDealsList().add(deal);
         }
 
+        if(deal.getmProducts() != null && deal.getmProducts().size() > 0){
+
         mProducts = deal.getmProducts();
 
-        ListView mProductListView = (ListView) findViewById(R.id.deal_one_product_listView);
+
         mProductListView.setAdapter(mAdapter);
 
-        for(Map.Entry<Product, Integer> entry : mProducts.entrySet()) {
+        for(Map.Entry<DealProduct, Integer> entry : mProducts.entrySet()) {
             Product key = entry.getKey();
             Integer value = entry.getValue();
             total += key.getmPrice() * value;
         }
+        }
 
-        totalTextView.setText("Total = " + total);
-        totalDisTextView.setText("Total Dis = " +  total * 0.99);
+        mTotalTextView.setText("Total = " + total);
+        mTotalDisTextView.setText("Total Dis = " +  total * 0.99);
         super.onResume();
+
     }
 
     public void add(View addButton){
@@ -133,7 +152,70 @@ public class DealActivity extends BaseActivity {
         startActivity(i);
     }
 
+    public void send(View sendButton){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy - MM - dd HH:mm");
+        String currentDateandTime = sdf.format(new Date());
+
+        mOrdersToSend = currentDateandTime +  '\r' + '\n' + '\n';
+        mOrdersToSend += "Table number : " + mDealNameId + '\r' + '\n';
+        mOrdersToSend += AlwarshaApp.m.getName() + '\r' + '\n';
+        for(Map.Entry<DealProduct, Integer> entry : mProducts.entrySet()) {
+            DealProduct key = entry.getKey();
+            Integer value = entry.getValue();
+            if(key.getStatus() == DealProduct.DealProductStatus.ORDERED){
+                mOrdersToSend += key.getName()+ '\t' + value + '\r' + '\n';
+            }
+        }
+        new Task().execute("ff");
+    }
+
+
     public void closeClicked(View closeButton){
         finish();
+    }
+    private class Task extends
+            AsyncTask<String, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            Log.d("fdsa","fadf");
+        }
+
+        @Override
+        protected Void doInBackground(String... arg0) {
+            try
+            {
+                int textLength = mOrdersToSend.length();
+
+                client = new Socket("192.168.1.19", 9100);
+
+                byte[] mybytearray = new byte[textLength];
+
+
+                bufferedInputStream = new ByteArrayInputStream(mOrdersToSend.getBytes());
+
+                bufferedInputStream.read(mybytearray, 0, mybytearray.length);
+
+                outputStream = client.getOutputStream();
+
+                outputStream.write(mybytearray, 0, mybytearray.length);
+                outputStream.flush();
+                bufferedInputStream.close();
+                outputStream.close();
+                client.close();
+
+
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+
+        }
     }
 }

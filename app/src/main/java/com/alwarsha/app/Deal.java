@@ -2,14 +2,16 @@ package com.alwarsha.app;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Halani on 4/24/14.
  */
 public class Deal {
 
-    public static enum DEAL_STATUS{
+    public static enum DEAL_STATUS {
         OPEN,
         CLOSED
     }
@@ -19,21 +21,21 @@ public class Deal {
         this.open = open;
     }
 
-    public Deal(Deal d){
+    public Deal(Deal d) {
         this.id = d.getId();
         this.name = d.getName();
         this.status = d.getStatus();
         this.total = d.getTotal();
         this.mProducts = d.getmProducts();
-        this.total_discount  = d.getTotal_discount();
+        this.total_discount = d.getTotal_discount();
         this.open = d.getOpen();
-        if(d.getClose() != null)
+        if (d.getClose() != null)
             this.close = d.getClose();
     }
 
     private int id;
     private String name;
-    private HashMap<Product,Integer> mProducts = new HashMap<Product, Integer>();
+    private HashMap<DealProduct, Integer> mProducts = new HashMap<DealProduct, Integer>();
     private DEAL_STATUS status;
     private float total;
     private float total_discount;
@@ -44,15 +46,40 @@ public class Deal {
         return id;
     }
 
-    public boolean addProduct(Product product){
-        Integer r = mProducts.get(product);
-        if(r!= null){
-            mProducts.put(product, mProducts.get(product) + 1);
-        }else{
-            mProducts.put(product,1);
+    public boolean addProduct(DealProduct product) {
+
+        String productName = product.getName();
+        Iterator it = mProducts.entrySet().iterator();
+//        if (!it.hasNext()) {
+//            mProducts.put(product, 1);
+//           // it.remove();
+//        } else {
+        boolean founded = false;
+        while (it.hasNext()) {
+            Map.Entry pairs = (Map.Entry) it.next();
+            Integer r = 0;
+            if (pairs != null)
+                r = (Integer) pairs.getValue();
+            if (((DealProduct) (pairs.getKey())).getName().equals(productName)) {
+                mProducts.put((DealProduct) (pairs.getKey()), r + 1);
+                founded = true;
+            }
         }
+        if (!founded) {
+            mProducts.put(product, 1);
+        }
+
+        //      }
+
+//
+//        if(r!= null){
+//            mProducts.put(product, r + 1);
+//        }else{
+//            mProducts.put(product,1);
+//        }
         return true;
     }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -65,11 +92,11 @@ public class Deal {
         this.name = name;
     }
 
-    public HashMap<Product, Integer> getmProducts() {
+    public HashMap<DealProduct, Integer> getmProducts() {
         return mProducts;
     }
 
-    public void setmProducts(HashMap<Product, Integer> mProducts) {
+    public void setmProducts(HashMap<DealProduct, Integer> mProducts) {
         this.mProducts = mProducts;
     }
 

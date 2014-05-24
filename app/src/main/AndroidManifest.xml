@@ -34,7 +34,7 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.alwarsha.activities.MenuDrinksActivity"
+            android:name="com.alwarsha.activities.MenuCategoriesActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
         </activity>

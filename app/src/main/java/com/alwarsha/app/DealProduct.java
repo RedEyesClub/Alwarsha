@@ -9,12 +9,12 @@ public class DealProduct extends Product {
 
     private DealProductStatus mStatus;
 
-    public DealProduct(int id, String name, String pictureName, float price) {
-      super(id,name,pictureName,price);
+    public DealProduct(int id, String name,int categoryId, String pictureName, float price,String language) {
+      super(id,name,categoryId,pictureName,price,language);
     }
 
     public DealProduct(Product p,DealProductStatus status) {
-        super(p.getmId(),p.getName(),p.getmPictureName(),p.getmPrice());
+        super(p);
         mStatus = status;
     }
 

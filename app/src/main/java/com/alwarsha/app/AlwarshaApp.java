@@ -36,30 +36,32 @@ public class AlwarshaApp extends Application {
     private AlwarshaApp() {
 
         List<Product> beersList = new ArrayList<Product>();
-        beersList.add(new Product(0, "Calsberg 1/3", "calsberg1_3", 20));
-        beersList.add(new Product(1, "Tuborg 1/3", "tuborg_g_1_3", 20));
-        beersList.add(new Product(2, "Tuborg 1/3", "tuborg_r_1_3", 20));
-        beersList.add(new Product(4, "Heineken 1/3", "heineken", 20));
-        beersList.add(new Product(5, "BECK'S 1/3s","becks", 20));
-        beersList.add(new Product(3, "Stella", "stella", 20));
-        
+//DB integration
+//        beersList.add(new Product(0, "Calsberg 1/3", "calsberg1_3", 20));
+//        beersList.add(new Product(1, "Tuborg 1/3", "tuborg_g_1_3", 20));
+//        beersList.add(new Product(2, "Tuborg 1/3", "tuborg_r_1_3", 20));
+//        beersList.add(new Product(4, "Heineken 1/3", "heineken", 20));
+//        beersList.add(new Product(5, "BECK'S 1/3s","becks", 20));
+//        beersList.add(new Product(3, "Stella", "stella", 20));
 
-        ProductCategory beers = new ProductCategory(0,"Beers","beers",beersList);
-        ProductCategory hotDrinks = new ProductCategory(1,"Hot drinks","hot_drinks",null);
-        ProductCategory alcohol = new ProductCategory(2,"Alcohol","alcohol",null);
-        ProductCategory softdrinks = new ProductCategory(3,"Soft Drinks","soft_drinks",null);
-
-
-
-        List<ProductCategory> productsCategoryList = new ArrayList<ProductCategory>();
-        productsCategoryList.add(beers);
-        productsCategoryList.add(hotDrinks);
-        productsCategoryList.add(alcohol);
-        productsCategoryList.add(softdrinks);
+//DB integration
+//        ProductCategory beers = new ProductCategory(0,"Beers","beers",beersList);
+//        ProductCategory hotDrinks = new ProductCategory(1,"Hot drinks","hot_drinks",null);
+//       ProductCategory alcohol = new ProductCategory(2,"Alcohol","alcohol",null);
+//        ProductCategory softdrinks = new ProductCategory(3,"Soft Drinks","soft_drinks",null);
 
 
 
-        mMenue = new Menu(productsCategoryList);
+//DB integration
+//        List<ProductCategory> productsCategoryList = new ArrayList<ProductCategory>();
+//        productsCategoryList.add(beers);
+//        productsCategoryList.add(hotDrinks);
+//        productsCategoryList.add(alcohol);
+//        productsCategoryList.add(softdrinks);
+
+
+//DB integration
+  //      mMenue = new Menu(productsCategoryList);
     }
 
     public Menu getMenue() {

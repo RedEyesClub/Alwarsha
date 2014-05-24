@@ -77,7 +77,8 @@ public class DealActivity extends BaseActivity {
             returnedValue = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_item, null);
             TextView productName = (TextView)returnedValue.findViewById(R.id.producrOneItemNameTextView);
             List keys = new ArrayList(mProducts.keySet());
-            productName.setText(((Product) (keys.get(position))).getName());
+            //DB integration
+            //productName.setText(((Product) (keys.get(position))).getName());
             ImageView productImage =(ImageView)returnedValue.findViewById(R.id.productOneItemImageView);
             productImage.setImageBitmap(Utils.getBitmapFromStorage(((Product)(keys.get(position))).getmPictureName()));
             TextView count = (TextView)returnedValue.findViewById(R.id.countTextView);
@@ -162,9 +163,10 @@ public class DealActivity extends BaseActivity {
         for(Map.Entry<DealProduct, Integer> entry : mProducts.entrySet()) {
             DealProduct key = entry.getKey();
             Integer value = entry.getValue();
-            if(key.getStatus() == DealProduct.DealProductStatus.ORDERED){
-                mOrdersToSend += key.getName()+ '\t' + value + '\r' + '\n';
-            }
+            //DB integration
+            //if(key.getStatus() == DealProduct.DealProductStatus.ORDERED){
+             //   mOrdersToSend += key.getName()+ '\t' + value + '\r' + '\n';
+            //}
         }
         new Task().execute("ff");
     }

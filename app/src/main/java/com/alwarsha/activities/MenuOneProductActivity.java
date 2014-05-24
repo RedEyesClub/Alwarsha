@@ -14,7 +14,12 @@ import com.alwarsha.app.AlwarshaApp;
 import com.alwarsha.app.DealProduct;
 import com.alwarsha.app.Product;
 import com.alwarsha.app.R;
+import com.alwarsha.data.ProductsGroupsProvider;
+import com.alwarsha.data.ProductsProvider;
 import com.alwarsha.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MenuOneProductActivity extends BaseActivity {
 
@@ -23,6 +28,7 @@ public class MenuOneProductActivity extends BaseActivity {
     private int mCategoryId;
     private String mSender;
     private String mDealNameId ="0";
+    List<Product> mProductsList = new ArrayList<Product>();
 
     private BaseAdapter mAdapter = new BaseAdapter() {
         private View.OnClickListener mOnButtonClicked = new View.OnClickListener() {
@@ -31,16 +37,17 @@ public class MenuOneProductActivity extends BaseActivity {
                 if(mSender != null){
                     TextView product = (TextView)v.findViewById(R.id.productId);
                     int position  = Integer.valueOf(product.getText().toString());
-                    Product p = (mApp.getMenue().getmProductsCategory()).get(mCategoryId).getmProductsList().get(position);
-                    DealProduct dp = new DealProduct(p, DealProduct.DealProductStatus.ORDERED);
-                    mApp.getDealsList().get(Integer.valueOf(mDealNameId)).addProduct(dp);
-                    Toast.makeText(MenuOneProductActivity.this,dp.getName() + " Added",Toast.LENGTH_SHORT).show();
+                    //DB integration
+                    //Product p = (mApp.getMenue().getmProductsCategory()).get(mCategoryId).getmProductsList().get(position);
+                    //DealProduct dp = new DealProduct(p, DealProduct.DealProductStatus.ORDERED);
+                    //mApp.getDealsList().get(Integer.valueOf(mDealNameId)).addProduct(dp);
+                    //Toast.makeText(MenuOneProductActivity.this,dp.getName() + " Added",Toast.LENGTH_SHORT).show();
                 }
             }
         };
         @Override
         public int getCount() {
-            return (mApp.getMenue().getmProductsCategory()).get(mCategoryId).getmProductsList().size();
+            return mProductsList.size();
         }
 
         @Override
@@ -60,9 +67,10 @@ public class MenuOneProductActivity extends BaseActivity {
             TextView productIdTextView = (TextView)returnedValue.findViewById(R.id.productId);
             productIdTextView.setText(String.valueOf(position));
             TextView productName = (TextView)returnedValue.findViewById(R.id.producrOneItemNameTextView);
-            productName.setText((mApp.getMenue().getmProductsCategory()).get(mCategoryId).getmProductsList().get(position).getName());
+            //TODO:Farid,  need to know wich language
+            productName.setText(mProductsList.get(position).getmName("EN"));
             ImageView productImage =(ImageView)returnedValue.findViewById(R.id.productOneItemImageView);
-            productImage.setImageBitmap(Utils.getBitmapFromStorage((mApp.getMenue().getmProductsCategory()).get(mCategoryId).getmProductsList().get(position).getmPictureName()));
+            productImage.setImageBitmap(Utils.getBitmapFromStorage(mProductsList.get(position).getmPictureName()));
             returnedValue.setOnClickListener(mOnButtonClicked);
             return returnedValue;
 
@@ -85,6 +93,10 @@ public class MenuOneProductActivity extends BaseActivity {
 
         mApp =  AlwarshaApp.getInstance();
         ListView drinksListView = (ListView) findViewById(R.id.oneProductListView);
+        if(mCategoryId > -1){
+            ProductsProvider provider = ProductsProvider.getInstace(this);
+            mProductsList = provider.getProductsCategory(String.valueOf(mCategoryId));
+        }
         drinksListView.setAdapter(mAdapter);
     }
 

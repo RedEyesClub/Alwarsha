@@ -25,23 +25,14 @@ import java.util.List;
 public class ProductsGroupsProvider {
     private static String TAG = "ProductsGroupsProvider";
 
-    private String[] mAllColumns = {
+    private static String[] mAllColumns = {
             DatabaseHelper.TABLE_PRODUCT_GROUP_ID, DatabaseHelper.TABLE_PRODUCT_GROUP_NAME,
             DatabaseHelper.TABLE_PRODUCT_GROUP_NAME_AR, DatabaseHelper.TABLE_PRODUCT_GROUP_PIC_NAME};
 
-    private DatabaseHelper mDbHelper;
+    private static DatabaseHelper mDbHelper;
     private Context mContext;
 
-    @Root (name="ProductGroups")
-    public static class ProductGroups{
-        @ElementList (name="groups")
-        public ArrayList<ProductGroup> groups;
 
-        public ProductGroups()
-        {
-            groups = new ArrayList<ProductGroup>();
-        }
-    }
 
     // Singleton
     private static ProductsGroupsProvider sInstace = null;
@@ -94,7 +85,7 @@ public class ProductsGroupsProvider {
         Log.d(TAG, "insert return value = " + i);
     }
 
-    public ProductGroup getProductGroup(int id) {
+    public static ProductGroup getProductGroup(int id) {
 
         ProductGroup product_group = null;
         SQLiteDatabase db = null;
@@ -126,7 +117,7 @@ public class ProductsGroupsProvider {
 
     public List<ProductGroup> ProductsGroups_getGroups(List<Integer> groups_ids)
     {
-        List<ProductGroup> product_groups = null;
+        List<ProductGroup> product_groups = new ArrayList<ProductGroup>();
         SQLiteDatabase db = null;
         Cursor cursor = null;
         try{
@@ -137,10 +128,9 @@ public class ProductsGroupsProvider {
             if(AlwarshaApp.DEBUG)
                 Log.e(TAG,"Exception at getProductGroup" );
         }
-        if(cursor.moveToFirst())
-        {
-            do
-            {
+        if (cursor.moveToFirst()) {
+            for (int i = 0; i < cursor.getCount(); i++) {
+
                 ProductGroup new_group = null;
                 int db_id = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.TABLE_PRODUCT_GROUP_ID));
 
@@ -151,16 +141,17 @@ public class ProductsGroupsProvider {
                     String db_name_en = cursor.getString(cursor.getColumnIndex(DatabaseHelper.TABLE_PRODUCT_GROUP_NAME));
 
                     String db_pic_name = cursor.getString(cursor.getColumnIndex(DatabaseHelper.TABLE_PRODUCT_GROUP_PIC_NAME));
-                    cursor.close();
+
 
                     new_group = new ProductGroup(db_id, db_name_en, db_pic_name,  "EN");
                     new_group.addName("AR",db_name_ar);
                     product_groups.add(new_group);
+                    cursor.moveToNext();
                 }
-            }
-            while(cursor.moveToNext());
-        }
 
+        }
+        }
+        cursor.close();
         return product_groups;
     }
 

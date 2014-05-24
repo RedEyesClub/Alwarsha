@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.alwarsha.app.AlwarshaApp;
 import com.alwarsha.app.Product;
+import com.alwarsha.app.ProductCategory;
 import com.alwarsha.app.ProductGroup;
 import com.alwarsha.app.StaffMember;
 
@@ -18,6 +19,7 @@ import org.simpleframework.xml.core.Persister;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Farid on 4/20/14.
@@ -30,7 +32,8 @@ public class ProductsProvider {
     private String[] mAllColumns = {
             DatabaseHelper.TABLE_PRODUCT_ID, DatabaseHelper.TABLE_PRODUCT_NAME,
             DatabaseHelper.TABLE_PRODUCT_NAME_AR, DatabaseHelper.TABLE_PRODUCT_PRICE,
-            DatabaseHelper.TABLE_PRODUCT_PRICE, DatabaseHelper.TABLE_PRODUCT_CAT_ID};
+            DatabaseHelper.TABLE_PRODUCT_CATEGORY_ID,DatabaseHelper.TABLE_PRODUCT_PIC_NAME,
+            DatabaseHelper.TABLE_PRODUCT_CAT_ID};
 
     private DatabaseHelper mDbHelper;
     private Context mContext;
@@ -110,7 +113,43 @@ public class ProductsProvider {
         long i  = db.insert(DatabaseHelper.TABLE_PRODUCTS, null, cv);
         Log.d(TAG, "insert return value = " + i);
     }
+    public List<Product> getProductsCategory(String categoryId){
+        List<Product> list = new ArrayList<Product>();
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        try {
+            db = mDbHelper.getReadableDatabase();
+            cursor = db.query(DatabaseHelper.TABLE_PRODUCTS, mAllColumns,
+                    DatabaseHelper.TABLE_PRODUCT_CATEGORY_ID + "=?"
+                    ,new String[]{categoryId}, null, null, null, null);
+        } catch (NullPointerException e) {
+            if (AlwarshaApp.DEBUG)
+                Log.e(TAG, "Exception at getProductGroup");
+        }
+        if (cursor.moveToFirst()) {
+            for (int i = 0; i < cursor.getCount(); i++) {
+                Product product = null;
+                int db_id = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.TABLE_PRODUCT_ID));
+                String db_name_ar = cursor.getString(cursor.getColumnIndex(DatabaseHelper.TABLE_PRODUCT_NAME_AR));
 
+                String db_name_en = cursor.getString(cursor.getColumnIndex(DatabaseHelper.TABLE_PRODUCT_NAME));
+
+                int db_category_id = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.TABLE_PRODUCT_CAT_ID));
+                String db_pic_name = cursor.getString(cursor.getColumnIndex(DatabaseHelper.TABLE_PRODUCT_PIC_NAME));
+                float db_price = cursor.getFloat(cursor.getColumnIndex(DatabaseHelper.TABLE_PRODUCT_PRICE));
+
+                product = new Product(db_id, db_name_en, db_category_id, db_pic_name,  db_price, "EN");
+                product.addName("AR", db_name_ar);
+                list.add(product);
+
+                cursor.moveToNext();
+
+            }
+        }
+        cursor.close();
+
+        return list;
+    }
     public Product getProduct(String id) {
 
         Product product = null;

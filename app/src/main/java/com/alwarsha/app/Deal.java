@@ -48,7 +48,8 @@ public class Deal {
 
     public boolean addProduct(DealProduct product) {
 
-        String productName = product.getName();
+        //DB integration
+        String productName = "temp";//product.getName();
         Iterator it = mProducts.entrySet().iterator();
 //        if (!it.hasNext()) {
 //            mProducts.put(product, 1);
@@ -60,10 +61,11 @@ public class Deal {
             Integer r = 0;
             if (pairs != null)
                 r = (Integer) pairs.getValue();
-            if (((DealProduct) (pairs.getKey())).getName().equals(productName)) {
-                mProducts.put((DealProduct) (pairs.getKey()), r + 1);
-                founded = true;
-            }
+            //DB integration
+            //if (((DealProduct) (pairs.getKey())).getName().equals(productName)) {
+            //    mProducts.put((DealProduct) (pairs.getKey()), r + 1);
+            //    founded = true;
+            //}
         }
         if (!founded) {
             mProducts.put(product, 1);

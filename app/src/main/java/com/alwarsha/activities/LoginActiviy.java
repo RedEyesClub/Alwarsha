@@ -53,19 +53,11 @@ public class LoginActiviy extends BaseActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_activiy);
-        //Locale.setDefault(new Locale("ar","EG"));
-
-        StaffMember member = new StaffMember("kalb","saher","xxx");
-
-        mProvider = StaffMembersProvider.getInstace(this);
-      //  mfile = Utils.getFileFromStorage("aa.txt");
-     //   mProvider.insertNewStaffMember(member);
-
-
 
         usernameEditText = (EditText)findViewById(R.id.username_editText);
         passwordEditText = (EditText)findViewById(R.id.password_editText);
 
+        mProvider = StaffMembersProvider.getInstace(this);
         loginButton = (Button)findViewById(R.id.login_button);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,29 +65,9 @@ public class LoginActiviy extends BaseActivity  {
                 username = usernameEditText.getText().toString();
                 password = passwordEditText.getText().toString();
                 AlwarshaApp.m = mProvider.getStaffMember(username,password);
-                //checkCredintials(username,password);
-               Intent i = new Intent(LoginActiviy.this,MainActivity.class);
-                startActivity(i);
-                finish();
-            //  new Task().execute("ff");
-                Integer port= 9100;
-
-
-
-
+                checkCredintials(username,password);
             }
         });
-        StaffMembersProvider mStaffMembersProvider = StaffMembersProvider.getInstace(this);
-        if(mStaffMembersProvider.StaffMemeber_initDataBase(Utils.getFileFromStorage("Staff.xml")) == false)
-        {
-            AlertDialog errorAlert = new AlertDialog.Builder(this)
-                    .setTitle("Error").setMessage("Staff Members XML")
-                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).show();
-        }
     }
 
     private void checkCredintials(final String username, final String password) {

@@ -15,6 +15,17 @@ public class Product {
     private String mPictureName;
     private float mPrice;
 
+    public Product(Product p){
+        this.mId = p.getmId();
+        if(p.getmName("EN") != null)
+            this.mName.put("EN", p.getmName("EN"));
+        if(p.getmName("AR") != null)
+            this.mName.put("AR", p.getmName("AR"));
+        this.mCategoryId = p.getmCategoryId();
+        this.mPictureName = p.getmPictureName();
+        this.mPrice = p.getmPrice();
+    }
+
     public Product(int mId, String mName, int mCategoryId, String mPictureName, float mPrice, String language) {
         this.mId = mId;
         this.mName = new HashMap<String, String>();

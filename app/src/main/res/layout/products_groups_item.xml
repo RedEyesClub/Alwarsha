@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="500dp"
+    android:layout_alignParentTop="true"
+    android:id="@+id/kitchenLayout"
+    android:layout_weight="1">
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:id="@+id/imageView"
+        android:src="@drawable/bar"
+        android:scaleType="centerCrop"/>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView"
+        android:text="Bar"
+        android:textSize="30sp"
+        android:gravity="center"
+        android:background="#80000000"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"/>
+    <!-- Group id is used when we click at the view -->
+    <TextView
+        android:id="@+id/groupIdTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+
+</RelativeLayout>

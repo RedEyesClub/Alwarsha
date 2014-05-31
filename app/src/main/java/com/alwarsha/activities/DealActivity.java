@@ -52,6 +52,7 @@ public class DealActivity extends BaseActivity {
     TextView mTotalDisTextView;
     ListView mProductListView;
     LinkedHashMap<Integer,Integer> mProductsCounter = new LinkedHashMap<Integer, Integer>();
+    LinkedHashMap<Integer,Integer> mSentProductsCounter = new LinkedHashMap<Integer, Integer>();
 
     private BaseAdapter mAdapter = new BaseAdapter() {
         private View.OnClickListener mOnButtonClicked = new View.OnClickListener() {
@@ -223,6 +224,39 @@ public class DealActivity extends BaseActivity {
         mOrdersToSend = currentDateandTime + '\r' + '\n' + '\n';
         mOrdersToSend += "Table number : " + mDealNameId + '\r' + '\n';
         mOrdersToSend += AlwarshaApp.m.getName() + '\r' + '\n';
+        ArrayList<String> printed = new ArrayList<String>();
+        for(DealProduct d:deal.getmProducts()){
+            if(d.getStatus() == DealProduct.DealProductStatus.SENT){
+                for (DealProduct dd : deal.getmProducts()) {
+                    Integer productCounter = mSentProductsCounter.get(d.getmId());
+                    if(productCounter != null){
+                        productCounter++;
+                    }else{
+                        productCounter = 1;
+                    }
+                    mSentProductsCounter.put(d.getmId(),productCounter);
+                }
+                continue;
+            }
+            boolean found = false;
+            for(String s:printed){
+                if(s.equals(d.getmName("EN"))){
+                    found =true;
+                    break;
+                }
+            }
+            if(!found){
+                int sent = 0 ;
+                if(mSentProductsCounter.get(d.getmId())!= null){
+                    sent = mSentProductsCounter.get(d.getmId());
+                }
+                int count =  mProductsCounter.get(d.getmId()) - sent;
+                mOrdersToSend += d.getmName("EN") + '\t' + count + '\r' + '\n';
+                printed.add(d.getmName("EN"));
+            }
+            d.setStatus(DealProduct.DealProductStatus.SENT);
+        }
+
 //        for (Map.Entry<DealProduct, Integer> entry : mProducts.entrySet()) {
 //            DealProduct key = entry.getKey();
 //            Integer value = entry.getValue();

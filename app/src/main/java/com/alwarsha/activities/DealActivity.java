@@ -163,12 +163,12 @@ public class DealActivity extends BaseActivity {
         for(Map.Entry<DealProduct, Integer> entry : mProducts.entrySet()) {
             DealProduct key = entry.getKey();
             Integer value = entry.getValue();
-            //DB integration
-            //if(key.getStatus() == DealProduct.DealProductStatus.ORDERED){
-             //   mOrdersToSend += key.getName()+ '\t' + value + '\r' + '\n';
-            //}
+
+            if(key.getStatus() == DealProduct.DealProductStatus.ORDERED){
+                mOrdersToSend += key.getmName("EN")+ '\t' + value + '\r' + '\n';
+            }
         }
-        new Task().execute("ff");
+        new Task().execute("");
     }
 
 
@@ -188,7 +188,7 @@ public class DealActivity extends BaseActivity {
             {
                 int textLength = mOrdersToSend.length();
 
-                client = new Socket("192.168.1.19", 9100);
+                client = new Socket("192.168.1.18", 9100);
 
                 byte[] mybytearray = new byte[textLength];
 

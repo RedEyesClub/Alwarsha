@@ -10,7 +10,7 @@ import java.util.HashMap;
  */
 public class Product {
     private int mId;
-    private HashMap<String, String> mName;
+    private HashMap<String, String> mName = new HashMap<String, String>();
     private int mCategoryId;
     private String mPictureName;
     private float mPrice;

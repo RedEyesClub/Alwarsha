@@ -37,11 +37,11 @@ public class MenuOneProductActivity extends BaseActivity {
                 if(mSender != null){
                     TextView product = (TextView)v.findViewById(R.id.productId);
                     int position  = Integer.valueOf(product.getText().toString());
-                    //DB integration
-                    //Product p = (mApp.getMenue().getmProductsCategory()).get(mCategoryId).getmProductsList().get(position);
-                    //DealProduct dp = new DealProduct(p, DealProduct.DealProductStatus.ORDERED);
-                    //mApp.getDealsList().get(Integer.valueOf(mDealNameId)).addProduct(dp);
-                    //Toast.makeText(MenuOneProductActivity.this,dp.getName() + " Added",Toast.LENGTH_SHORT).show();
+
+                    Product p = mProductsList.get(position);
+                    DealProduct dp = new DealProduct(p, DealProduct.DealProductStatus.ORDERED);
+                    mApp.getDealsList().get(Integer.valueOf(mDealNameId)).addProduct(dp);
+                    Toast.makeText(MenuOneProductActivity.this,dp.getmName("EN") + " Added",Toast.LENGTH_SHORT).show();
                 }
             }
         };

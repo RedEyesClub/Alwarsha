@@ -84,7 +84,7 @@ public class MenuCategoriesActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(MenuCategoriesActivity.this,MenuOneProductActivity.class);
-                intent.putExtra("id",i+1);
+                intent.putExtra("id",categoriesList.get(i).getmId());
                 if(mSender!=null){
                     intent.putExtra("sender", mSender);
                     intent.putExtra("dealId", mDealNameId);

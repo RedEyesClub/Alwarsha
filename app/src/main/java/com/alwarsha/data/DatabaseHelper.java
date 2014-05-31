@@ -57,6 +57,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_PRODUCT_CATEGORY_NAME_AR = "name_ar";
     public static final String TABLE_PRODUCT_CATEGORY_PIC_NAME = "picture_name";
 
+    //Deals table
+    public static final String TABLE_DEALS = "deals";
+
+    public static final String TABLE_DEAL_NAME = "deal_name";
+    public static final String TABLE_DEAL_OPEN_TIME = "open_time";
+    public static final String TABLE_DEAL_CLOSE_TIME = "close_time";
+    public static final String TABLE_DEAL_STATUS = "status";
+    public static final String TABLE_DEAL_TOTAL = "total";
+    public static final String TABLE_DEAL_DISCOUNT = "discount";
+    public static final String TABLE_DEAL_COMMENT = "comment";
+
+    //Deals product table
+    public static final String TABLE_DEALS_PRODUCT = "deals_product";
+
+    public static final String TABLE_DEALS_PRODUCT_ID = "deals_product_id";
+    public static final String TABLE_DEALS_PRODUCT_STATUS = "deals_product_status";
+    public static final String TABLE_DEALS_PRODUCT_DEAL_ID = "deals_product_deal_id";
+
+
+
+
+
+
     public DatabaseHelper(Context context) {
 
 		super(context, DB_NAME, null, SCHEMA);
@@ -92,33 +115,47 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		try {
 			db.beginTransaction();
 			db.execSQL("DROP TABLE IF EXISTS " + DB_NAME);
-			db.execSQL("CREATE TABLE " + TABLE_STAFF_MEMBERS
+//			db.execSQL("CREATE TABLE " + TABLE_STAFF_MEMBERS
+//                    + " (" + "_id" + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+//                    + TABLE_STAFF_MEMBERS_ID + " INTEGER,"
+//                    + TABLE_STAFF_MEMBERS_NAME + " TEXT,"
+//                    + TABLE_STAFF_MEMBERS_PASSWORD + " TEXT,"
+//                    + TABLE_STAFF_MEMBERS_STATUS + " TEXT);");
+//            db.execSQL("CREATE TABLE " + TABLE_PRODUCTS
+//                    + " (" + "_id" + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+//                    + TABLE_PRODUCT_ID + " INTEGER, "
+//                    + TABLE_PRODUCT_NAME + " TEXT, "
+//                    + TABLE_PRODUCT_NAME_AR + " TEXT, "
+//                    + TABLE_PRODUCT_PRICE + " REAL, "
+//                    + TABLE_PRODUCT_CAT_ID + " INTEGER, "
+//                    + TABLE_PRODUCT_PIC_NAME + " TEXT);");
+//            db.execSQL("CREATE TABLE " + TABLE_PRODUCTS_GROUPS
+//                    + " (" + "_id" + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+//                    + TABLE_PRODUCT_GROUP_ID + " INTEGER,"
+//                    + TABLE_PRODUCT_GROUP_NAME + " TEXT,"
+//                    + TABLE_PRODUCT_GROUP_NAME_AR + " TEXT, "
+//                    + TABLE_PRODUCT_GROUP_PIC_NAME + " TEXT);");
+//            db.execSQL("CREATE TABLE " + TABLE_PRODUCTS_CATEGORIES
+//                    + " (" + "_id" + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+//                    + TABLE_PRODUCT_CATEGORY_ID + " INTEGER, "
+//                    + TABLE_PRODUCT_CATEGORY_GROUP_ID + " INTEGER, "
+//                    + TABLE_PRODUCT_CATEGORY_NAME + " TEXT, "
+//                    + TABLE_PRODUCT_CATEGORY_NAME_AR + " TEXT,"
+//                    + TABLE_PRODUCT_CATEGORY_PIC_NAME + " TEXT);");
+            db.execSQL("CREATE TABLE " + TABLE_DEALS
                     + " (" + "_id" + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + TABLE_STAFF_MEMBERS_ID + " INTEGER,"
-                    + TABLE_STAFF_MEMBERS_NAME + " TEXT,"
-                    + TABLE_STAFF_MEMBERS_PASSWORD + " TEXT,"
-                    + TABLE_STAFF_MEMBERS_STATUS + " TEXT);");
-            db.execSQL("CREATE TABLE " + TABLE_PRODUCTS
+                    + TABLE_DEAL_NAME + " TEXT, "
+                    + TABLE_DEAL_OPEN_TIME + " TEXT, "
+                    + TABLE_DEAL_CLOSE_TIME + " TEXT, "
+                    + TABLE_DEAL_STATUS + " TEXT,"
+                    + TABLE_DEAL_TOTAL + " REAL,"
+                    + TABLE_DEAL_DISCOUNT + " REAL,"
+                    + TABLE_DEAL_COMMENT + " TEXT);");
+            db.execSQL("CREATE TABLE " + TABLE_DEALS_PRODUCT
                     + " (" + "_id" + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + TABLE_PRODUCT_ID + " INTEGER, "
-                    + TABLE_PRODUCT_NAME + " TEXT, "
-                    + TABLE_PRODUCT_NAME_AR + " TEXT, "
-                    + TABLE_PRODUCT_PRICE + " REAL, "
-                    + TABLE_PRODUCT_CAT_ID + " INTEGER, "
-                    + TABLE_PRODUCT_PIC_NAME + " TEXT);");
-            db.execSQL("CREATE TABLE " + TABLE_PRODUCTS_GROUPS
-                    + " (" + "_id" + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + TABLE_PRODUCT_GROUP_ID + " INTEGER,"
-                    + TABLE_PRODUCT_GROUP_NAME + " TEXT,"
-                    + TABLE_PRODUCT_GROUP_NAME_AR + " TEXT, "
-                    + TABLE_PRODUCT_GROUP_PIC_NAME + " TEXT);");
-            db.execSQL("CREATE TABLE " + TABLE_PRODUCTS_CATEGORIES
-                    + " (" + "_id" + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + TABLE_PRODUCT_CATEGORY_ID + " INTEGER, "
-                    + TABLE_PRODUCT_CATEGORY_GROUP_ID + " INTEGER, "
-                    + TABLE_PRODUCT_CATEGORY_NAME + " TEXT, "
-                    + TABLE_PRODUCT_CATEGORY_NAME_AR + " TEXT,"
-                    + TABLE_PRODUCT_CATEGORY_PIC_NAME + " TEXT);");
+                    + TABLE_DEALS_PRODUCT_ID + " INTEGER, "
+                    + TABLE_DEALS_PRODUCT_STATUS + " TEXT, "
+                    + TABLE_DEALS_PRODUCT_DEAL_ID + " INTEGER);");
 
 			db.setTransactionSuccessful();
 		} finally {

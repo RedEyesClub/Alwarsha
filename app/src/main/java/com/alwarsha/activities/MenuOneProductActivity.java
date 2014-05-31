@@ -36,9 +36,8 @@ public class MenuOneProductActivity extends BaseActivity {
             public void onClick(View v) {
                 if(mSender != null){
                     TextView product = (TextView)v.findViewById(R.id.productId);
-                    int position  = Integer.valueOf(product.getText().toString());
-
-                    Product p = mProductsList.get(position);
+                    int productId  = Integer.valueOf(product.getText().toString());
+                    Product p = mProductsList.get(productId);
                     DealProduct dp = new DealProduct(p, DealProduct.DealProductStatus.ORDERED);
                     mApp.getDealsList().get(Integer.valueOf(mDealNameId)).addProduct(dp);
                     Toast.makeText(MenuOneProductActivity.this,dp.getmName("EN") + " Added",Toast.LENGTH_SHORT).show();

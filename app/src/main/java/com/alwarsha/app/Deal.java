@@ -1,5 +1,6 @@
 package com.alwarsha.app;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -35,7 +36,7 @@ public class Deal {
 
     private int id;
     private String name;
-    private HashMap<DealProduct, Integer> mProducts = new HashMap<DealProduct, Integer>();
+    private List<DealProduct> mProducts = new ArrayList<DealProduct>();
     private DEAL_STATUS status;
     private float total;
     private float total_discount;
@@ -48,28 +49,30 @@ public class Deal {
 
     public boolean addProduct(DealProduct product) {
 
-        //DB integration
-        String productName = "temp";//product.getName();
-        Iterator it = mProducts.entrySet().iterator();
-//        if (!it.hasNext()) {
+        mProducts.add(product);
+
+//        //DB integration
+//        String productName = "temp";//product.getName();
+//        Iterator it = mProducts.entrySet().iterator();
+////        if (!it.hasNext()) {
+////            mProducts.put(product, 1);
+////           // it.remove();
+////        } else {
+//        boolean founded = false;
+//        while (it.hasNext()) {
+//            Map.Entry pairs = (Map.Entry) it.next();
+//            Integer r = 0;
+//            if (pairs != null)
+//                r = (Integer) pairs.getValue();
+//            //DB integration
+//            //if (((DealProduct) (pairs.getKey())).getName().equals(productName)) {
+//            //    mProducts.put((DealProduct) (pairs.getKey()), r + 1);
+//            //    founded = true;
+//            //}
+//        }
+//        if (!founded) {
 //            mProducts.put(product, 1);
-//           // it.remove();
-//        } else {
-        boolean founded = false;
-        while (it.hasNext()) {
-            Map.Entry pairs = (Map.Entry) it.next();
-            Integer r = 0;
-            if (pairs != null)
-                r = (Integer) pairs.getValue();
-            //DB integration
-            //if (((DealProduct) (pairs.getKey())).getName().equals(productName)) {
-            //    mProducts.put((DealProduct) (pairs.getKey()), r + 1);
-            //    founded = true;
-            //}
-        }
-        if (!founded) {
-            mProducts.put(product, 1);
-        }
+//        }
 
         //      }
 
@@ -94,11 +97,11 @@ public class Deal {
         this.name = name;
     }
 
-    public HashMap<DealProduct, Integer> getmProducts() {
+    public List<DealProduct> getmProducts() {
         return mProducts;
     }
 
-    public void setmProducts(HashMap<DealProduct, Integer> mProducts) {
+    public void setmProducts(List<DealProduct> mProducts) {
         this.mProducts = mProducts;
     }
 

@@ -1,5 +1,7 @@
 package com.alwarsha.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,13 +31,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class DealActivity extends BaseActivity {
 
     private String mDealNameId;
-    private HashMap<DealProduct,Integer> mProducts = new HashMap<DealProduct, Integer>();
+  //  private List<DealProduct> mProducts = new ArrayList<DealProduct>();
     private Deal deal;
     private int mTotal;
     private int mTotalDis;
@@ -48,17 +51,44 @@ public class DealActivity extends BaseActivity {
     TextView mTotalTextView;
     TextView mTotalDisTextView;
     ListView mProductListView;
+    LinkedHashMap<Integer,Integer> mProductsCounter = new LinkedHashMap<Integer, Integer>();
 
     private BaseAdapter mAdapter = new BaseAdapter() {
         private View.OnClickListener mOnButtonClicked = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                final TextView productIdView = (TextView)v.findViewById(R.id.productId);
+                new AlertDialog.Builder(DealActivity.this)
+                        .setTitle("Delete product")
+                        .setMessage("Are you sure you want to delete product?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                for(DealProduct d:deal.getmProducts()){
+                                    String productId = productIdView.getText().toString();
+                                    if(Integer.valueOf(productId) == d.getmId()){
+                                        if(d.getStatus() == DealProduct.DealProductStatus.ORDERED){
+                                            deal.getmProducts().remove(d);
+                                            initProductsHashMap();
+                                            mAdapter.notifyDataSetChanged();
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
             }
         };
+
         @Override
         public int getCount() {
-            return (mProducts.size());
+            return (mProductsCounter.size());
         }
 
         @Override
@@ -75,26 +105,42 @@ public class DealActivity extends BaseActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             View returnedValue;
             returnedValue = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_item, null);
-            TextView productName = (TextView)returnedValue.findViewById(R.id.producrOneItemNameTextView);
-            List keys = new ArrayList(mProducts.keySet());
-            //DB integration
-            //productName.setText(((Product) (keys.get(position))).getName());
-            ImageView productImage =(ImageView)returnedValue.findViewById(R.id.productOneItemImageView);
-            productImage.setImageBitmap(Utils.getBitmapFromStorage(((Product)(keys.get(position))).getmPictureName()));
-            TextView count = (TextView)returnedValue.findViewById(R.id.countTextView);
-            count.setText(" " + (int)mProducts.get(((Product)(keys.get(position)))));
+            TextView productName = (TextView) returnedValue.findViewById(R.id.producrOneItemNameTextView);
+            ImageView productImage = (ImageView)returnedValue.findViewById(R.id.productOneItemImageView);
+            TextView productPrice = (TextView)returnedValue.findViewById(R.id.producrOneItemPriceLoTextView);
+            TextView productCount = (TextView)returnedValue.findViewById(R.id.countTextView);
+            TextView productIdView = (TextView)returnedValue.findViewById(R.id.productId);
+
+            returnedValue.setOnClickListener(mOnButtonClicked);
+
+            DealProduct tempProduct = null;
+            List keys = new ArrayList(mProductsCounter.keySet());
+            Integer productId = (Integer)keys.get(position);
+            for(DealProduct p:deal.getmProducts()){
+                if(p.getmId() == productId){
+                    tempProduct = p;
+                }
+            }
+            productName.setText(tempProduct.getmName("EN"));
+            productImage.setImageBitmap(Utils.getBitmapFromStorage(tempProduct.getmPictureName()));
+            productPrice.setText("" + tempProduct.getmPrice());
+            productCount.setText("" + mProductsCounter.get(tempProduct.getmId()));
+            productIdView.setText("" + tempProduct.getmId());
+
+
             return returnedValue;
 
         }
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         TextView deal_name;
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deal);
-        mTotalTextView = (TextView)findViewById(R.id.totalTextView);
-        mTotalDisTextView = (TextView)findViewById(R.id.totalDisTextView);
+        mTotalTextView = (TextView) findViewById(R.id.totalTextView);
+        mTotalDisTextView = (TextView) findViewById(R.id.totalDisTextView);
         mProductListView = (ListView) findViewById(R.id.deal_one_product_listView);
 
         mApp = AlwarshaApp.getInstance();
@@ -104,7 +150,7 @@ public class DealActivity extends BaseActivity {
             mDealNameId = extras.getString("dealName");
         }
 
-        deal_name = (TextView)findViewById(R.id.deal_name);
+        deal_name = (TextView) findViewById(R.id.deal_name);
         deal_name.setText(mDealNameId);
 
     }
@@ -114,78 +160,95 @@ public class DealActivity extends BaseActivity {
 
         int total = 0;
 
-        for(Deal l : mApp.getDealsList() ){
-            if(l.getName().equals(mDealNameId)){
+        for (Deal l : mApp.getDealsList()) {
+            if (l.getName().equals(mDealNameId)) {
                 deal = new Deal(l);
-                mProducts = l.getmProducts();
+                deal.setmProducts(l.getmProducts());
                 break;
             }
         }
-        if(deal == null){
-            deal = new Deal(mDealNameId,new Date());
+        if (deal == null) {
+            deal = new Deal(mDealNameId, new Date());
             mApp.getDealsList().add(deal);
         }
 
-        if(deal.getmProducts() != null && deal.getmProducts().size() > 0){
+        if (deal.getmProducts() != null && deal.getmProducts().size() > 0) {
 
-        mProducts = deal.getmProducts();
+            deal.setmProducts(deal.getmProducts());
 
 
-        mProductListView.setAdapter(mAdapter);
+            mProductListView.setAdapter(mAdapter);
 
-        for(Map.Entry<DealProduct, Integer> entry : mProducts.entrySet()) {
-            Product key = entry.getKey();
-            Integer value = entry.getValue();
-            total += key.getmPrice() * value;
+            for (DealProduct d : deal.getmProducts()) {
+
+                total += d.getmPrice();
+            }
         }
-        }
+
+
+        initProductsHashMap();
 
         mTotalTextView.setText("Total = " + total);
-        mTotalDisTextView.setText("Total Dis = " +  total * 0.99);
+        mTotalDisTextView.setText("Total Dis = " + total * 0.99);
         super.onResume();
 
     }
 
-    public void add(View addButton){
-        Intent i = new Intent(DealActivity.this,MenuMainActivity.class);
-        i.putExtra("sender",DealActivity.class.getSimpleName());
-        i.putExtra("dealId",mDealNameId);
+    private void initProductsHashMap(){
+        if(mProductsCounter.size() > 0 )
+            mProductsCounter.clear();
+        for (DealProduct d : deal.getmProducts()) {
+            Integer productCounter = mProductsCounter.get(d.getmId());
+            if(productCounter != null){
+                productCounter++;
+            }else{
+                productCounter = 1;
+            }
+            mProductsCounter.put(d.getmId(),productCounter);
+
+        }
+    }
+
+    public void add(View addButton) {
+        Intent i = new Intent(DealActivity.this, MenuMainActivity.class);
+        i.putExtra("sender", DealActivity.class.getSimpleName());
+        i.putExtra("dealId", mDealNameId);
         startActivity(i);
     }
 
-    public void send(View sendButton){
+    public void send(View sendButton) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy - MM - dd HH:mm");
         String currentDateandTime = sdf.format(new Date());
 
-        mOrdersToSend = currentDateandTime +  '\r' + '\n' + '\n';
+        mOrdersToSend = currentDateandTime + '\r' + '\n' + '\n';
         mOrdersToSend += "Table number : " + mDealNameId + '\r' + '\n';
         mOrdersToSend += AlwarshaApp.m.getName() + '\r' + '\n';
-        for(Map.Entry<DealProduct, Integer> entry : mProducts.entrySet()) {
-            DealProduct key = entry.getKey();
-            Integer value = entry.getValue();
-
-            if(key.getStatus() == DealProduct.DealProductStatus.ORDERED){
-                mOrdersToSend += key.getmName("EN")+ '\t' + value + '\r' + '\n';
-            }
-        }
+//        for (Map.Entry<DealProduct, Integer> entry : mProducts.entrySet()) {
+//            DealProduct key = entry.getKey();
+//            Integer value = entry.getValue();
+//
+//            if (key.getStatus() == DealProduct.DealProductStatus.ORDERED) {
+//                mOrdersToSend += key.getmName("EN") + '\t' + value + '\r' + '\n';
+//            }
+//        }
         new Task().execute("");
     }
 
 
-    public void closeClicked(View closeButton){
+    public void closeClicked(View closeButton) {
         finish();
     }
+
     private class Task extends
             AsyncTask<String, Void, Void> {
         @Override
         protected void onPreExecute() {
-            Log.d("fdsa","fadf");
+            Log.d("fdsa", "fadf");
         }
 
         @Override
         protected Void doInBackground(String... arg0) {
-            try
-            {
+            try {
                 int textLength = mOrdersToSend.length();
 
                 client = new Socket("192.168.1.18", 9100);

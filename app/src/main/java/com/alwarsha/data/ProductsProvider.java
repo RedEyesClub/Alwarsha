@@ -150,7 +150,7 @@ public class ProductsProvider {
 
         return list;
     }
-    public Product getProduct(String id) {
+    public Product getProduct(int id) {
 
         Product product = null;
         SQLiteDatabase db = null;
@@ -159,7 +159,7 @@ public class ProductsProvider {
             db = mDbHelper.getReadableDatabase();
             cursor = db.query(DatabaseHelper.TABLE_PRODUCTS, mAllColumns,
                     DatabaseHelper.TABLE_PRODUCT_ID + "=?"
-                    ,new String[]{id}, null, null, null, null);
+                    ,new String[]{String.valueOf(id)}, null, null, null, null);
         }catch (NullPointerException e){
             if(AlwarshaApp.DEBUG)
                 Log.e(TAG,"Exception at getProduct" );

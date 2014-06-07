@@ -9,7 +9,12 @@ import android.widget.ImageView;
 
 import com.alwarsha.app.R;
 import 	android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Farid on 5/2/14.
@@ -17,12 +22,26 @@ import android.widget.TextView;
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
 
+    public List<String> getmTablesPictures() {
+        return mTablesPictures;
+    }
+
+    public void setmTablesPictures(List<String> mTablesPictures) {
+        this.mTablesPictures = mTablesPictures;
+    }
+
+    private List<String> mTablesPictures = new ArrayList<String>();
+
+
     public ImageAdapter(Context c) {
         mContext = c;
+        for(int i =0; i<9; i++){
+            mTablesPictures.add(String.valueOf(i));
+        }
     }
 
     public int getCount() {
-        return mThumbIds.length;
+        return mTablesPictures.size() + 2;
     }
 
     public Object getItem(int position) {
@@ -39,24 +58,32 @@ public class ImageAdapter extends BaseAdapter {
         View returnedValue;
         returnedValue = LayoutInflater.from(parent.getContext()).inflate(R.layout.main_screen_item, null);
         TextView tableTextView = (TextView)returnedValue.findViewById(R.id.tableNameTextView);
-        if(position == 9){
-            tableTextView.setText("Menu");
-        }else {
-            tableTextView.setText("Table " + String.valueOf(position));
-            tableTextView.setBackgroundColor(0xffff00);
-        }
         ImageView tableImage =(ImageView)returnedValue.findViewById(R.id.mainScreenOneItemImageView);
 
-        tableImage.setImageResource(mThumbIds[position]);
+        if(position < mTablesPictures.size()){
+            tableTextView.setText("Table " + mTablesPictures.get(position));
+            tableTextView.setBackgroundColor(0xffff00);
+            tableImage.setImageResource(R.drawable.table);
+        }else if (position == mTablesPictures.size()){
+            tableTextView.setText("Add deal");
+            tableTextView.setBackgroundColor(0xffff00);
+            tableImage.setImageResource(mSpecialThumps[0]);
+        }else if(position == mTablesPictures.size() + 1){
+            tableTextView.setText("Menu");
+            tableImage.setImageResource(mSpecialThumps[1]);
+        }
+
         return returnedValue;
     }
 
-    // references to our images
-    private Integer[] mThumbIds = {
-            R.drawable.table, R.drawable.table,
-            R.drawable.table, R.drawable.table,
-            R.drawable.table, R.drawable.table,
-            R.drawable.table, R.drawable.table,
-            R.drawable.table, R.drawable.menu,
+    public void addDeal(String dealName){
+
+        mTablesPictures.add(dealName);
+    }
+
+
+    private Integer[] mSpecialThumps = {
+            R.drawable.plus_add_green,
+            R.drawable.menu
     };
 }

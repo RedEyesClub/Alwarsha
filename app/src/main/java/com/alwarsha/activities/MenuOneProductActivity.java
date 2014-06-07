@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alwarsha.app.AlwarshaApp;
+import com.alwarsha.app.Deal;
 import com.alwarsha.app.DealProduct;
 import com.alwarsha.app.Product;
 import com.alwarsha.app.R;
@@ -39,7 +40,15 @@ public class MenuOneProductActivity extends BaseActivity {
                     int productId  = Integer.valueOf(product.getText().toString());
                     Product p = mProductsList.get(productId);
                     DealProduct dp = new DealProduct(p, DealProduct.DealProductStatus.ORDERED);
+
                     mApp.getDealsList().get(Integer.valueOf(mDealNameId)).addProduct(dp, getApplicationContext());
+
+                    for(Deal d:mApp.getDealsList()){
+                        if(d.getName().equals(mDealNameId)){
+                            d.addProduct(dp, getApplicationContext());
+                        }
+                    }
+                  //  mApp.getDealsList().get(Integer.valueOf(mDealNameId)).addProduct(dp);
                     Toast.makeText(MenuOneProductActivity.this,dp.getmName("EN") + " Added",Toast.LENGTH_SHORT).show();
                 }
             }

@@ -39,7 +39,7 @@ public class MenuOneProductActivity extends BaseActivity {
                     int productId  = Integer.valueOf(product.getText().toString());
                     Product p = mProductsList.get(productId);
                     DealProduct dp = new DealProduct(p, DealProduct.DealProductStatus.ORDERED);
-                    mApp.getDealsList().get(Integer.valueOf(mDealNameId)).addProduct(dp);
+                    mApp.getDealsList().get(Integer.valueOf(mDealNameId)).addProduct(dp, getApplicationContext());
                     Toast.makeText(MenuOneProductActivity.this,dp.getmName("EN") + " Added",Toast.LENGTH_SHORT).show();
                 }
             }

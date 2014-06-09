@@ -1,6 +1,14 @@
 package com.alwarsha.app;
 
+import android.content.Context;
+import android.util.Log;
+
+import com.alwarsha.data.DealsProductProvider;
+import com.alwarsha.data.DealsProvider;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,17 +21,52 @@ import java.util.Map;
 public class Deal {
 
     public static enum DEAL_STATUS {
-        OPEN,
-        CLOSED
+        OPEN("OPEN"),
+        CLOSED("CLOSED");
+
+        private String status;
+        private DEAL_STATUS(String status) {
+            this.status = status;
+        }
+
+        @Override
+        public String toString(){
+            return status;
+        }
+
+        public static DEAL_STATUS fromString(String x) {
+            if(x.equals("OPEN"))
+                return OPEN;
+            if(x.equals("CLOSED"))
+                return CLOSED;
+
+            return null;
+        }
     }
 
-    public Deal(String name, Date open) {
+    public Deal() { }
+
+    public Deal(String name, Context context) throws Exception {
         this.name = name;
-        this.open = open;
+        this.open = new Date();
+        this.status = DEAL_STATUS.OPEN;
+        this.total = 0;
+        this.total_discount = 0;
+        this.comment = "";
+        this.close = new Date();
+        this.id = -1;
+
+        DealsProvider dp = DealsProvider.getInstace(context);
+        try{
+            this.id = dp.insertNewDeal(this);
+        }
+        catch(Exception ex){
+            throw (ex);
+        }
+
     }
 
     public Deal(Deal d) {
-        this.id = d.getId();
         this.name = d.getName();
         this.status = d.getStatus();
         this.total = d.getTotal();
@@ -32,6 +75,16 @@ public class Deal {
         this.open = d.getOpen();
         if (d.getClose() != null)
             this.close = d.getClose();
+        this.id = d.getId();
+        this.comment = "";
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     private int id;
@@ -42,51 +95,38 @@ public class Deal {
     private float total_discount;
     private Date open;
     private Date close;
+    private String comment;
 
-    public int getId() {
-        return id;
+    public String getComment() {
+        return comment;
     }
 
-    public boolean addProduct(DealProduct product) {
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 
+    public void closeDeal(float total_discount, String comment, Context context){
+        this.total_discount = total_discount;
+        this.status = DEAL_STATUS.CLOSED;
+        this.comment = comment;
+
+        DealsProvider dp = DealsProvider.getInstace(context);
+        dp.updateDeal(this);
+    }
+
+    public boolean addProduct(DealProduct product, Context context) {
+
+        DealsProductProvider dpp = DealsProductProvider.getInstace(context);
+        product.setDeal_id(this.id);
+        product.setId(dpp.insertNewDealProduct(product));
+
+        this.total += product.getmPrice();
+
+        DealsProvider dp = DealsProvider.getInstace(context);
+        dp.updateDeal(this);
         mProducts.add(product);
 
-//        //DB integration
-//        String productName = "temp";//product.getName();
-//        Iterator it = mProducts.entrySet().iterator();
-////        if (!it.hasNext()) {
-////            mProducts.put(product, 1);
-////           // it.remove();
-////        } else {
-//        boolean founded = false;
-//        while (it.hasNext()) {
-//            Map.Entry pairs = (Map.Entry) it.next();
-//            Integer r = 0;
-//            if (pairs != null)
-//                r = (Integer) pairs.getValue();
-//            //DB integration
-//            //if (((DealProduct) (pairs.getKey())).getName().equals(productName)) {
-//            //    mProducts.put((DealProduct) (pairs.getKey()), r + 1);
-//            //    founded = true;
-//            //}
-//        }
-//        if (!founded) {
-//            mProducts.put(product, 1);
-//        }
-
-        //      }
-
-//
-//        if(r!= null){
-//            mProducts.put(product, r + 1);
-//        }else{
-//            mProducts.put(product,1);
-//        }
         return true;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {

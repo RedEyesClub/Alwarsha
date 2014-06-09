@@ -30,6 +30,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -174,7 +175,14 @@ public class DealActivity extends BaseActivity {
             }
         }
         if (deal == null) {
-            deal = new Deal(mDealNameId, new Date());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+
+            try{
+                deal = new Deal(mDealNameId, getApplicationContext());
+            }
+            catch(Exception ex){
+
+            }
             mApp.getDealsList().add(deal);
         }
 

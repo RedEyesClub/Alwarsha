@@ -60,6 +60,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //Deals table
     public static final String TABLE_DEALS = "deals";
 
+    public static final String TABLE_DEAL_ID = "deal_id";
     public static final String TABLE_DEAL_NAME = "deal_name";
     public static final String TABLE_DEAL_OPEN_TIME = "open_time";
     public static final String TABLE_DEAL_CLOSE_TIME = "close_time";
@@ -72,6 +73,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_DEALS_PRODUCT = "deals_product";
 
     public static final String TABLE_DEALS_PRODUCT_ID = "deals_product_id";
+    public static final String TABLE_DEALS_PRODUCT_PRODUCT_ID = "deals_product_product_id";
     public static final String TABLE_DEALS_PRODUCT_STATUS = "deals_product_status";
     public static final String TABLE_DEALS_PRODUCT_DEAL_ID = "deals_product_deal_id";
 
@@ -153,7 +155,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     + TABLE_DEAL_COMMENT + " TEXT);");
             db.execSQL("CREATE TABLE " + TABLE_DEALS_PRODUCT
                     + " (" + "_id" + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + TABLE_DEALS_PRODUCT_ID + " INTEGER, "
+                    + TABLE_DEALS_PRODUCT_PRODUCT_ID + " INTEGER, "
                     + TABLE_DEALS_PRODUCT_STATUS + " TEXT, "
                     + TABLE_DEALS_PRODUCT_DEAL_ID + " INTEGER);");
 

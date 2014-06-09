@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -38,7 +39,7 @@ import java.util.Map;
 public class DealActivity extends BaseActivity {
 
     private String mDealNameId;
-  //  private List<DealProduct> mProducts = new ArrayList<DealProduct>();
+    //  private List<DealProduct> mProducts = new ArrayList<DealProduct>();
     private Deal deal;
     private int mTotal;
     private int mTotalDis;
@@ -51,23 +52,23 @@ public class DealActivity extends BaseActivity {
     TextView mTotalTextView;
     TextView mTotalDisTextView;
     ListView mProductListView;
-    LinkedHashMap<Integer,Integer> mProductsCounter = new LinkedHashMap<Integer, Integer>();
-    LinkedHashMap<Integer,Integer> mSentProductsCounter = new LinkedHashMap<Integer, Integer>();
+    LinkedHashMap<Integer, Integer> mProductsCounter = new LinkedHashMap<Integer, Integer>();
+    LinkedHashMap<Integer, Integer> mSentProductsCounter = new LinkedHashMap<Integer, Integer>();
 
     private BaseAdapter mAdapter = new BaseAdapter() {
         private View.OnClickListener mOnButtonClicked = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final TextView productIdView = (TextView)v.findViewById(R.id.productId);
+                final TextView productIdView = (TextView) v.findViewById(R.id.productId);
                 new AlertDialog.Builder(DealActivity.this)
                         .setTitle("Delete product")
                         .setMessage("Are you sure you want to delete product?")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                for(DealProduct d:deal.getmProducts()){
+                                for (DealProduct d : deal.getmProducts()) {
                                     String productId = productIdView.getText().toString();
-                                    if(Integer.valueOf(productId) == d.getmId()){
-                                        if(d.getStatus() == DealProduct.DealProductStatus.ORDERED){
+                                    if (Integer.valueOf(productId) == d.getmId()) {
+                                        if (d.getStatus() == DealProduct.DealProductStatus.ORDERED) {
                                             deal.getmProducts().remove(d);
                                             initProductsHashMap();
                                             mAdapter.notifyDataSetChanged();
@@ -107,18 +108,21 @@ public class DealActivity extends BaseActivity {
             View returnedValue;
             returnedValue = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_item, null);
             TextView productName = (TextView) returnedValue.findViewById(R.id.producrOneItemNameTextView);
-            ImageView productImage = (ImageView)returnedValue.findViewById(R.id.productOneItemImageView);
-            TextView productPrice = (TextView)returnedValue.findViewById(R.id.producrOneItemPriceLoTextView);
-            TextView productCount = (TextView)returnedValue.findViewById(R.id.countTextView);
-            TextView productIdView = (TextView)returnedValue.findViewById(R.id.productId);
+            ImageView productImage = (ImageView) returnedValue.findViewById(R.id.productOneItemImageView);
+            TextView productPrice = (TextView) returnedValue.findViewById(R.id.producrOneItemPriceLoTextView);
+            TextView productCount = (TextView) returnedValue.findViewById(R.id.countTextView);
+            TextView productIdView = (TextView) returnedValue.findViewById(R.id.productId);
+            TextView commentTextView = (TextView) returnedValue.findViewById(R.id.producrOneItemComment);
+            LinearLayout l = (LinearLayout) returnedValue.findViewById(R.id.producrOneItemCommentLayout);
+            l.setVisibility(View.VISIBLE);
 
             returnedValue.setOnClickListener(mOnButtonClicked);
 
             DealProduct tempProduct = null;
             List keys = new ArrayList(mProductsCounter.keySet());
-            Integer productId = (Integer)keys.get(position);
-            for(DealProduct p:deal.getmProducts()){
-                if(p.getmId() == productId){
+            Integer productId = (Integer) keys.get(position);
+            for (DealProduct p : deal.getmProducts()) {
+                if (p.getmId() == productId) {
                     tempProduct = p;
                 }
             }
@@ -127,6 +131,7 @@ public class DealActivity extends BaseActivity {
             productPrice.setText("" + tempProduct.getmPrice());
             productCount.setText("" + mProductsCounter.get(tempProduct.getmId()));
             productIdView.setText("" + tempProduct.getmId());
+            commentTextView.setText(tempProduct.getComment());
 
 
             return returnedValue;
@@ -195,17 +200,21 @@ public class DealActivity extends BaseActivity {
 
     }
 
-    private void initProductsHashMap(){
-        if(mProductsCounter.size() > 0 )
+    private void initProductsHashMap() {
+        if (mProductsCounter.size() > 0)
             mProductsCounter.clear();
         for (DealProduct d : deal.getmProducts()) {
             Integer productCounter = mProductsCounter.get(d.getmId());
-            if(productCounter != null){
+            if (d.getComment() != null && d.getComment().trim().length() > 0) {
+                productCounter = 1;
+                mProductsCounter.put(d.getmId(), productCounter);
+                continue;
+            } else if (productCounter != null) {
                 productCounter++;
-            }else{
+            } else {
                 productCounter = 1;
             }
-            mProductsCounter.put(d.getmId(),productCounter);
+            mProductsCounter.put(d.getmId(), productCounter);
 
         }
     }
@@ -225,32 +234,32 @@ public class DealActivity extends BaseActivity {
         mOrdersToSend += "Table number : " + mDealNameId + '\r' + '\n';
         mOrdersToSend += AlwarshaApp.m.getName() + '\r' + '\n';
         ArrayList<String> printed = new ArrayList<String>();
-        for(DealProduct d:deal.getmProducts()){
-            if(d.getStatus() == DealProduct.DealProductStatus.SENT){
+        for (DealProduct d : deal.getmProducts()) {
+            if (d.getStatus() == DealProduct.DealProductStatus.SENT) {
                 for (DealProduct dd : deal.getmProducts()) {
                     Integer productCounter = mSentProductsCounter.get(d.getmId());
-                    if(productCounter != null){
+                    if (productCounter != null) {
                         productCounter++;
-                    }else{
+                    } else {
                         productCounter = 1;
                     }
-                    mSentProductsCounter.put(d.getmId(),productCounter);
+                    mSentProductsCounter.put(d.getmId(), productCounter);
                 }
                 continue;
             }
             boolean found = false;
-            for(String s:printed){
-                if(s.equals(d.getmName("EN"))){
-                    found =true;
+            for (String s : printed) {
+                if (s.equals(d.getmName("EN"))) {
+                    found = true;
                     break;
                 }
             }
-            if(!found){
-                int sent = 0 ;
-                if(mSentProductsCounter.get(d.getmId())!= null){
+            if (!found) {
+                int sent = 0;
+                if (mSentProductsCounter.get(d.getmId()) != null) {
                     sent = mSentProductsCounter.get(d.getmId());
                 }
-                int count =  mProductsCounter.get(d.getmId()) - sent;
+                int count = mProductsCounter.get(d.getmId()) - sent;
                 mOrdersToSend += d.getmName("EN") + '\t' + count + '\r' + '\n';
                 printed.add(d.getmName("EN"));
             }

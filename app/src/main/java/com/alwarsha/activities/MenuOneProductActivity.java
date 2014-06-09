@@ -1,11 +1,15 @@
 package com.alwarsha.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,6 +54,55 @@ public class MenuOneProductActivity extends BaseActivity {
                 }
             }
         };
+
+        private View.OnLongClickListener mOnItemLongClicked = new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                AlertDialog.Builder commentAlert = new AlertDialog.Builder(MenuOneProductActivity.this);
+                final View v = view;
+                commentAlert.setTitle("Product comment");
+                commentAlert.setMessage("Enter comment");
+
+
+                final EditText input = new EditText(MenuOneProductActivity.this);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.FILL_PARENT,
+                        LinearLayout.LayoutParams.FILL_PARENT);
+                input.setLayoutParams(lp);
+                input.setHeight(100);
+                commentAlert.setView(input);
+
+                commentAlert.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        if(mSender != null){
+                            TextView product = (TextView)v.findViewById(R.id.productId);
+                            int productId  = Integer.valueOf(product.getText().toString());
+                            Product p = mProductsList.get(productId);
+                            DealProduct dp = new DealProduct(p, DealProduct.DealProductStatus.ORDERED);
+                            dp.setComment(input.getText().toString());
+                            for(Deal d:mApp.getDealsList()){
+                                if(d.getName().equals(mDealNameId)){
+                                    d.addProduct(dp);
+                                }
+                            }
+                            Toast.makeText(MenuOneProductActivity.this,dp.getmName("EN") + " Added",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                commentAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+
+
+                commentAlert.show();
+
+                return false;
+            }
+        };
         @Override
         public int getCount() {
             return mProductsList.size();
@@ -77,6 +130,7 @@ public class MenuOneProductActivity extends BaseActivity {
             ImageView productImage =(ImageView)returnedValue.findViewById(R.id.productOneItemImageView);
             productImage.setImageBitmap(Utils.getBitmapFromStorage(mProductsList.get(position).getmPictureName()));
             returnedValue.setOnClickListener(mOnButtonClicked);
+            returnedValue.setOnLongClickListener(mOnItemLongClicked);
             return returnedValue;
 
         }

@@ -60,6 +60,7 @@
         android:orientation="vertical"
         android:layout_marginTop="5dp">
         <EditText
+            android:id="@+id/dealActivityCommentEditText"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:hint="Comment"/>
@@ -67,7 +68,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Save Comment"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:onClick="setDealComment"/>
 
 
     </LinearLayout>

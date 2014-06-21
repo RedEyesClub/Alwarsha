@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -48,6 +49,7 @@ public class DealActivity extends BaseActivity {
     private ByteArrayInputStream bufferedInputStream;
     private OutputStream outputStream;
     private String mOrdersToSend = "";
+    TextView mCommentTextView;
     TextView mTotalTextView;
     TextView mTotalDisTextView;
     ListView mProductListView;
@@ -147,6 +149,7 @@ public class DealActivity extends BaseActivity {
         mTotalTextView = (TextView) findViewById(R.id.totalTextView);
         mTotalDisTextView = (TextView) findViewById(R.id.totalDisTextView);
         mProductListView = (ListView) findViewById(R.id.deal_one_product_listView);
+        mCommentTextView = (TextView) findViewById(R.id.dealActivityCommentEditText);
 
         mApp = AlwarshaApp.getInstance();
         Bundle extras = getIntent().getExtras();
@@ -185,6 +188,9 @@ public class DealActivity extends BaseActivity {
 
         mTotalTextView.setText("Total = " + deal.getTotal());
         mTotalDisTextView.setText("Total Dis = " + deal.getTotal_discount());
+        if(deal.getComment() != null){
+            mCommentTextView.setText(deal.getComment());
+        }
         super.onResume();
     }
 
@@ -268,6 +274,14 @@ public class DealActivity extends BaseActivity {
         new Task().execute(mOrdersToSend);
     }
 
+    public  void setDealComment(View SetCommentButton){
+        this.runOnUiThread(new Runnable() {
+            public void run() {
+                EditText comment = (EditText)findViewById(R.id.dealActivityCommentEditText);
+                deal.setDealComment(comment.getText().toString());
+            }
+        });
+    }
 
     public void closeClicked(View closeButton) {
 

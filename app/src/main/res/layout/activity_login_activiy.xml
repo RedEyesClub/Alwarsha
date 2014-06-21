@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:background="#AAFFFFFF"
         android:hint="@string/password"
-        android:text="had321"/>
+        android:text="456"/>
 
     <Button
         android:layout_width="match_parent"

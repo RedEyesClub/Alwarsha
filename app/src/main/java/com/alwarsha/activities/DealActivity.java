@@ -22,6 +22,7 @@ import com.alwarsha.app.Product;
 import com.alwarsha.app.R;
 import com.alwarsha.data.DealsProvider;
 import com.alwarsha.utils.Utils;
+import com.alwarsha.utils.YesNoAlertMessage;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
@@ -292,7 +293,34 @@ public class DealActivity extends BaseActivity {
 
 
     public void closeClicked(View closeButton) {
-        finish();
+
+        this.runOnUiThread(new Runnable() {
+            public void run() {
+                final YesNoAlertMessage error = new YesNoAlertMessage(
+                        DealActivity.this, "Exit", "Are you sure?", null);
+
+
+                error.show();
+
+                error.yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        error.dismiss();
+                        finish();
+                    }
+                });
+                error.no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        error.dismiss();
+
+
+
+                    }
+                });
+            }
+        });
     }
 
     private class Task extends
@@ -307,7 +335,7 @@ public class DealActivity extends BaseActivity {
             try {
                 int textLength = mOrdersToSend.length();
 
-                client = new Socket("192.168.1.18", 9100);
+                client = new Socket("192.168.1.19", 9100);
 
                 byte[] mybytearray = new byte[textLength];
 

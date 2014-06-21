@@ -52,7 +52,6 @@ public class MenuOneProductActivity extends BaseActivity {
                             d.addProduct(dp, getApplicationContext());
                         }
                     }
-                  //  mApp.getDealsList().get(Integer.valueOf(mDealNameId)).addProduct(dp);
                     Toast.makeText(MenuOneProductActivity.this,dp.getmName("EN") + " Added",Toast.LENGTH_SHORT).show();
                 }
             }

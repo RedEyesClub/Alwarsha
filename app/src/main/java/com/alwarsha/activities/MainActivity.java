@@ -34,8 +34,6 @@ public class MainActivity extends BaseActivity {
                                     int position, long id) {
                 if(position < mImageAdapter.getmTablesPictures().size() ){
                     Intent i = new Intent(MainActivity.this,DealActivity.class);
-                    // Button b = (Button)tableButton;
-                    // String buttonText = b.getText().toString();
                     i.putExtra("dealName", String.valueOf(position));
                     startActivity(i);
 

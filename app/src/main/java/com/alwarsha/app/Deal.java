@@ -125,6 +125,9 @@ public class Deal {
         DealsProductProvider dpp = DealsProductProvider.getInstace(context);
         product.setDeal_id(this.id);
         product.setId(dpp.insertNewDealProduct(product));
+        if(mProducts == null){
+            mProducts = new ArrayList<DealProduct>();
+        }
         mProducts.add(product);
 
         this.total += product.getmPrice();
@@ -171,7 +174,7 @@ public class Deal {
         saveInDB();
     }
 
-    public void closeDeal(){
+    public void close(){
         if(status == DEAL_STATUS.CLOSED){
             return;
         }

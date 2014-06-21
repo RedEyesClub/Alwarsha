@@ -15,19 +15,8 @@ import com.alwarsha.data.StaffMembersProvider;
  */
 public class AlwarshaApp extends Application {
     public static boolean DEBUG = true;
-    private Menu mMenue;
     private static AlwarshaApp ourInstance = new AlwarshaApp();
-    private List<Deal> dealsList = new ArrayList<Deal>();
     public static  StaffMember m;
-
-    public List<Deal> getDealsList() {
-        return dealsList;
-    }
-
-    public void setDealsList(List<Deal> dealsList) {
-        this.dealsList = dealsList;
-    }
-
 
     public static AlwarshaApp getInstance() {
         return ourInstance;
@@ -35,7 +24,7 @@ public class AlwarshaApp extends Application {
 
     private AlwarshaApp() {
 
-        List<Product> beersList = new ArrayList<Product>();
+//        List<Product> beersList = new ArrayList<Product>();
 //DB integration
 //        beersList.add(new Product(0, "Calsberg 1/3", "calsberg1_3", 20));
 //        beersList.add(new Product(1, "Tuborg 1/3", "tuborg_g_1_3", 20));
@@ -64,11 +53,4 @@ public class AlwarshaApp extends Application {
   //      mMenue = new Menu(productsCategoryList);
     }
 
-    public Menu getMenue() {
-        return mMenue;
-    }
-
-    public void setMenue(Menu mMenue) {
-        this.mMenue = mMenue;
-    }
 }

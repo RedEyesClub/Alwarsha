@@ -65,6 +65,8 @@ public class Deal {
             throw (ex);
         }
 
+        this.myContext = context;
+
     }
 
     public Deal(Deal d) {
@@ -81,6 +83,7 @@ public class Deal {
             this.close = d.getClose();
         this.id = d.getId();
         this.comment = "";
+        this.myContext = d.myContext;
     }
 
     public int getId() {
@@ -92,7 +95,9 @@ public class Deal {
     }
 
     private int id;
+
     private String name;
+
     private List<DealProduct> mProducts = new ArrayList<DealProduct>();
     private DEAL_STATUS status;
     private float total;
@@ -100,21 +105,18 @@ public class Deal {
     private Date open;
     private Date close;
     private String comment;
+    private Context myContext;
 
-    public String getComment() {
-        return comment;
+    public Context getMyContext() {
+        return myContext;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setMyContext(Context myContext) {
+        this.myContext = myContext;
     }
 
-    public void closeDeal(float total_discount, String comment, Context context){
-        this.total_discount = total_discount;
-        this.status = DEAL_STATUS.CLOSED;
-        this.comment = comment;
-
-        DealsProvider dp = DealsProvider.getInstace(context);
+    private void saveInDB(){
+        DealsProvider dp = DealsProvider.getInstace(this.myContext);
         dp.updateDeal(this);
     }
 
@@ -123,14 +125,59 @@ public class Deal {
         DealsProductProvider dpp = DealsProductProvider.getInstace(context);
         product.setDeal_id(this.id);
         product.setId(dpp.insertNewDealProduct(product));
+        mProducts.add(product);
 
         this.total += product.getmPrice();
 
-        DealsProvider dp = DealsProvider.getInstace(context);
-        dp.updateDeal(this);
-        mProducts.add(product);
+        saveInDB();
 
         return true;
+    }
+
+    public DealProduct.DealProductStatus delete_product(int product_id){
+        DealProduct dealProduct = null;
+        for(DealProduct dp: mProducts ){
+            if((dp.getmId() == product_id) && (dp.getStatus() == DealProduct.DealProductStatus.ORDERED)){
+                dealProduct = dp;
+                break;
+            }
+        }
+        if(dealProduct == null){
+            for(DealProduct dp: mProducts ){
+                if((dp.getmId() == product_id) && (dp.getStatus() == DealProduct.DealProductStatus.SENT)){
+                    dealProduct = dp;
+                    break;
+                }
+            }
+        }
+        if(dealProduct == null){
+            return null;
+        }
+        DealsProductProvider dpp = DealsProductProvider.getInstace(myContext);
+        dpp.deleteDealProduct(dealProduct.getId());
+        DealProduct.DealProductStatus ret_val = dealProduct.getStatus();
+
+        mProducts.remove(dealProduct);
+        return ret_val;
+    }
+
+    public void setDealComment(String new_comment){
+        this.comment = new_comment;
+        saveInDB();
+    }
+
+    public void setTotalDiscount(float new_discount){
+        this.total_discount = new_discount;
+        saveInDB();
+    }
+
+    public void closeDeal(){
+        if(status == DEAL_STATUS.CLOSED){
+            return;
+        }
+        this.status = DEAL_STATUS.CLOSED;
+        this.close = new Date();
+        saveInDB();
     }
 
     public String getName() {
@@ -189,5 +236,12 @@ public class Deal {
         this.close = close;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 
 }

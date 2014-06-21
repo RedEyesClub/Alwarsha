@@ -249,7 +249,7 @@ public class DealActivity extends BaseActivity {
         mOrdersToSend += AlwarshaApp.m.getName() + '\r' + '\n';
         ArrayList<String> printed = new ArrayList<String>();
         for (DealProduct d : deal.getmProducts()) {
-            if (d.getStatus() == DealProduct.DealProductStatus.SENT) {
+            if (d.getStatus() == DealProduct.DealProductStatus.ORDERED) {
                 for (DealProduct dd : deal.getmProducts()) {
                     Integer productCounter = mSentProductsCounter.get(d.getmId());
                     if (productCounter != null) {
@@ -288,7 +288,7 @@ public class DealActivity extends BaseActivity {
 //                mOrdersToSend += key.getmName("EN") + '\t' + value + '\r' + '\n';
 //            }
 //        }
-        new Task().execute("");
+        new Task().execute(mOrdersToSend);
     }
 
 
@@ -306,21 +306,77 @@ public class DealActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         error.dismiss();
+                        deal.closeDeal();
+                        sendCloseDeal();
                         finish();
                     }
                 });
                 error.no.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         error.dismiss();
-
-
-
                     }
                 });
             }
         });
+    }
+
+    private void sendCloseDeal(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy - MM - dd HH:mm");
+        String currentDateandTime = sdf.format(new Date());
+        LinkedHashMap<Integer, Integer> sentProductsCounter = new LinkedHashMap<Integer, Integer>();
+
+        String dealClose = "+++++++++++++++++++++++++++++++" + '\r'  + '\n';
+        dealClose += "Close deal" + '\r'  + '\n';
+        dealClose += currentDateandTime + '\r' + '\n' + '\n';
+        dealClose += "Table number : " + mDealNameId + '\r' + '\n';
+        dealClose += AlwarshaApp.m.getName() + '\r' + '\n';
+        ArrayList<String> printed = new ArrayList<String>();
+        for (DealProduct d : deal.getmProducts()) {
+            if (d.getStatus() == DealProduct.DealProductStatus.SENT) {
+                for (DealProduct dd : deal.getmProducts()) {
+                    Integer productCounter = sentProductsCounter.get(d.getmId());
+                    if (productCounter != null) {
+                        productCounter++;
+                    } else {
+                        productCounter = 1;
+                    }
+                    sentProductsCounter.put(d.getmId(), productCounter);
+                }
+                continue;
+            }
+            boolean found = false;
+            for (String s : printed) {
+                if (s.equals(d.getmName("EN"))) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                int sent = 0;
+                if (sentProductsCounter.get(d.getmId()) != null) {
+                    sent = sentProductsCounter.get(d.getmId());
+                }
+                int count = mProductsCounter.get(d.getmId()) - sent;
+                dealClose += d.getmName("EN") + '\t' + count + '\r' + '\n';
+                printed.add(d.getmName("EN"));
+            }
+            d.setStatus(DealProduct.DealProductStatus.SENT);
+        }
+
+        dealClose+="---- Total =  " + deal.getTotal() + '\r' + '\n';
+        dealClose+="---- Total after discount =  " + String.valueOf(deal.getTotal() - deal.getTotal_discount()) + '\r' + '\n';
+
+
+//        for (Map.Entry<DealProduct, Integer> entry : mProducts.entrySet()) {
+//            DealProduct key = entry.getKey();
+//            Integer value = entry.getValue();
+//
+//            if (key.getStatus() == DealProduct.DealProductStatus.ORDERED) {
+//                mOrdersToSend += key.getmName("EN") + '\t' + value + '\r' + '\n';
+//            }
+//        }
+        new Task().execute(dealClose);
     }
 
     private class Task extends
@@ -333,18 +389,20 @@ public class DealActivity extends BaseActivity {
         @Override
         protected Void doInBackground(String... arg0) {
             try {
-                int textLength = mOrdersToSend.length();
 
-                client = new Socket("192.168.1.19", 9100);
+                Log.d("FFF",arg0[0]);
+                int textLength = arg0[0].length();
+
+                Socket client = new Socket("192.168.1.19", 9100);
 
                 byte[] mybytearray = new byte[textLength];
 
 
-                bufferedInputStream = new ByteArrayInputStream(mOrdersToSend.getBytes());
+                ByteArrayInputStream bufferedInputStream = new ByteArrayInputStream(arg0[0].getBytes());
 
                 bufferedInputStream.read(mybytearray, 0, mybytearray.length);
 
-                outputStream = client.getOutputStream();
+                OutputStream outputStream = client.getOutputStream();
 
                 outputStream.write(mybytearray, 0, mybytearray.length);
                 outputStream.flush();

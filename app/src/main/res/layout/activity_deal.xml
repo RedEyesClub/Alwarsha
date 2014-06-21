@@ -84,6 +84,13 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Total = 0"/>
+        <EditText
+            android:id="@+id/dealActivityDiscountEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="Discount%"/>
         <TextView
             android:id="@+id/totalDisTextView"
             android:layout_width="0dp"

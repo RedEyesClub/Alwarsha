@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 
 import com.alwarsha.app.R;
 import com.alwarsha.utils.ImageAdapter;
+import com.alwarsha.utils.YesNoAlertMessage;
 
 public class MainActivity extends BaseActivity {
 
@@ -90,6 +91,27 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        this.runOnUiThread(new Runnable() {
+            public void run() {
+                final YesNoAlertMessage error = new YesNoAlertMessage(
+                        MainActivity.this, "Exit", "Are you sure?", null);
+                error.show();
+
+                error.yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        finish();
+                    }
+                });
+                error.no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        error.dismiss();
+
+                    }
+                });
+            }
+        });
+
     }
 }

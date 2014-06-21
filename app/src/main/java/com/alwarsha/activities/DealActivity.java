@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -53,6 +54,7 @@ public class DealActivity extends BaseActivity {
     ListView mProductListView;
     LinkedHashMap<Integer, Integer> mProductsCounter = new LinkedHashMap<Integer, Integer>();
     LinkedHashMap<Integer, Integer> mSentProductsCounter = new LinkedHashMap<Integer, Integer>();
+    private EditText  mDiscountEdtitText;
 
     private BaseAdapter mAdapter = new BaseAdapter() {
         private View.OnClickListener mOnButtonClicked = new View.OnClickListener() {
@@ -147,6 +149,21 @@ public class DealActivity extends BaseActivity {
         mTotalTextView = (TextView) findViewById(R.id.totalTextView);
         mTotalDisTextView = (TextView) findViewById(R.id.totalDisTextView);
         mProductListView = (ListView) findViewById(R.id.deal_one_product_listView);
+        mDiscountEdtitText = (EditText)findViewById(R.id.dealActivityDiscountEditText);
+
+        mDiscountEdtitText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus == true) {
+
+                } else {
+                    int discountPercent =Integer.valueOf( mDiscountEdtitText.getText().toString());
+                    String total = "Toatal Discount = " + String.valueOf(deal.getTotal() - deal.getTotal() *discountPercent/100 );
+                    mTotalDisTextView.setText(total);
+
+                }
+
+            }
+        });
 
         mApp = AlwarshaApp.getInstance();
         Bundle extras = getIntent().getExtras();

@@ -20,6 +20,7 @@ import com.alwarsha.app.Deal;
 import com.alwarsha.app.DealProduct;
 import com.alwarsha.app.Product;
 import com.alwarsha.app.R;
+import com.alwarsha.data.DealsProvider;
 import com.alwarsha.utils.Utils;
 
 import java.io.ByteArrayInputStream;
@@ -181,7 +182,11 @@ public class DealActivity extends BaseActivity {
                 deal = new Deal(mDealNameId, getApplicationContext());
             }
             catch(Exception ex){
-
+                if(ex.getMessage().equals("OPEN Deal with same name already exist in DB")){
+                    DealsProvider dp = DealsProvider.getInstace(DealActivity.this);
+                    deal = new Deal();
+                    deal = dp.getOpenDealByName(mDealNameId);
+                }
             }
             mApp.getDealsList().add(deal);
         }

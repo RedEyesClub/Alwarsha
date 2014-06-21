@@ -85,7 +85,8 @@ public class MenuOneProductActivity extends BaseActivity {
                             dp.setComment(input.getText().toString());
                             for(Deal d:mApp.getDealsList()){
                                 if(d.getName().equals(mDealNameId)){
-                                    d.addProduct(dp,MenuOneProductActivity.this);
+                                    d.addProduct(dp,MenuOneProductActivity.this
+                                 );
                                 }
                             }
                             Toast.makeText(MenuOneProductActivity.this,dp.getmName("EN") + " Added",Toast.LENGTH_SHORT).show();

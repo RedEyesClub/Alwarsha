@@ -19,6 +19,7 @@ import java.util.Map;
  * Created by Halani on 4/24/14.
  */
 public class Deal {
+    DealsProvider mDealProvider;
 
     public static enum DEAL_STATUS {
         OPEN("OPEN"),
@@ -56,9 +57,9 @@ public class Deal {
         this.close = new Date();
         this.id = -1;
 
-        DealsProvider dp = DealsProvider.getInstace(context);
+        mDealProvider = DealsProvider.getInstace(context);
         try{
-            this.id = dp.insertNewDeal(this);
+            this.id = mDealProvider.insertNewDeal(this);
         }
         catch(Exception ex){
             throw (ex);
@@ -67,6 +68,9 @@ public class Deal {
     }
 
     public Deal(Deal d) {
+
+       // Deal s = mDealProvider.getOpenDealByName(d.getName());
+
         this.name = d.getName();
         this.status = d.getStatus();
         this.total = d.getTotal();

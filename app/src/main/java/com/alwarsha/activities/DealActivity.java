@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.alwarsha.app.AlwarshaApp;
 import com.alwarsha.app.Deal;
 import com.alwarsha.app.DealProduct;
-import com.alwarsha.app.Product;
 import com.alwarsha.app.R;
 import com.alwarsha.data.DealsProvider;
 import com.alwarsha.utils.Utils;
@@ -32,12 +31,9 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DealActivity extends BaseActivity {
 
@@ -169,54 +165,35 @@ public class DealActivity extends BaseActivity {
 
         int total = 0;
 
-        for (Deal l : mApp.getDealsList()) {
-            if (l.getName().equals(mDealNameId)) {
-                deal = new Deal(l);
-                deal.setmProducts(l.getmProducts());
-                break;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+
+        try{
+            deal = new Deal(mDealNameId, getApplicationContext());
+        }
+        catch(Exception ex){
+            if(ex.getMessage().equals("OPEN Deal with same name already exist in DB")){
+                DealsProvider dp = DealsProvider.getInstace(DealActivity.this);
+                deal = dp.getOpenDealByName(mDealNameId);
             }
         }
-        if (deal == null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
 
-            try{
-                deal = new Deal(mDealNameId, getApplicationContext());
-            }
-            catch(Exception ex){
-                if(ex.getMessage().equals("OPEN Deal with same name already exist in DB")){
-                    DealsProvider dp = DealsProvider.getInstace(DealActivity.this);
-                    deal = new Deal();
-                    deal = dp.getOpenDealByName(mDealNameId);
-                }
-            }
-            mApp.getDealsList().add(deal);
-        }
-
-        if (deal.getmProducts() != null && deal.getmProducts().size() > 0) {
-
-            deal.setmProducts(deal.getmProducts());
-
-
+        if((deal.getmProducts() != null) && (deal.getmProducts().size() > 0)){
             mProductListView.setAdapter(mAdapter);
-
-            for (DealProduct d : deal.getmProducts()) {
-
-                total += d.getmPrice();
-            }
         }
-
 
         initProductsHashMap();
 
-        mTotalTextView.setText("Total = " + total);
-        mTotalDisTextView.setText("Total Dis = " + total * 0.99);
+        mTotalTextView.setText("Total = " + deal.getTotal());
+        mTotalDisTextView.setText("Total Dis = " + deal.getTotal_discount());
         super.onResume();
-
     }
 
     private void initProductsHashMap() {
         if (mProductsCounter.size() > 0)
             mProductsCounter.clear();
+        if(deal.getmProducts() == null){
+            return;
+        }
         for (DealProduct d : deal.getmProducts()) {
             Integer productCounter = mProductsCounter.get(d.getmId());
             if (d.getComment() != null && d.getComment().trim().length() > 0) {
@@ -305,6 +282,7 @@ public class DealActivity extends BaseActivity {
                 error.yes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        deal.close();
                         error.dismiss();
                         finish();
                     }
@@ -314,7 +292,6 @@ public class DealActivity extends BaseActivity {
                     public void onClick(View v) {
 
                         error.dismiss();
-
 
 
                     }

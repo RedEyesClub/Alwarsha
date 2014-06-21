@@ -19,7 +19,7 @@ import com.alwarsha.app.Deal;
 import com.alwarsha.app.DealProduct;
 import com.alwarsha.app.Product;
 import com.alwarsha.app.R;
-import com.alwarsha.data.ProductsGroupsProvider;
+import com.alwarsha.data.DealsProvider;
 import com.alwarsha.data.ProductsProvider;
 import com.alwarsha.utils.Utils;
 
@@ -32,7 +32,7 @@ public class MenuOneProductActivity extends BaseActivity {
     private static String TAG = "MenuOneProductActivity";
     private int mCategoryId;
     private String mSender;
-    private String mDealNameId ="0";
+    private String mDealName ="0";
     List<Product> mProductsList = new ArrayList<Product>();
 
     private BaseAdapter mAdapter = new BaseAdapter() {
@@ -44,14 +44,15 @@ public class MenuOneProductActivity extends BaseActivity {
                     int productId  = Integer.valueOf(product.getText().toString());
                     Product p = mProductsList.get(productId);
                     DealProduct dp = new DealProduct(p, DealProduct.DealProductStatus.ORDERED);
+                    DealsProvider deals_provider = DealsProvider.getInstace(getApplicationContext());
 
-                    mApp.getDealsList().get(Integer.valueOf(mDealNameId)).addProduct(dp, getApplicationContext());
-
-                    for(Deal d:mApp.getDealsList()){
-                        if(d.getName().equals(mDealNameId)){
-                            d.addProduct(dp, getApplicationContext());
-                        }
+                    Deal open_deal = deals_provider.getOpenDealByName(mDealName);
+                    if(open_deal == null){
+                        return;
                     }
+
+                    open_deal.addProduct(dp, getApplicationContext());
+
                     Toast.makeText(MenuOneProductActivity.this,dp.getmName("EN") + " Added",Toast.LENGTH_SHORT).show();
                 }
             }
@@ -82,12 +83,14 @@ public class MenuOneProductActivity extends BaseActivity {
                             Product p = mProductsList.get(productId);
                             DealProduct dp = new DealProduct(p, DealProduct.DealProductStatus.ORDERED);
                             dp.setComment(input.getText().toString());
-                            for(Deal d:mApp.getDealsList()){
-                                if(d.getName().equals(mDealNameId)){
-                                    d.addProduct(dp,MenuOneProductActivity.this
-                                 );
-                                }
+                            DealsProvider deals_provider = DealsProvider.getInstace(getApplicationContext());
+
+                            Deal open_deal = deals_provider.getOpenDealByName(mDealName);
+                            if(open_deal == null){
+                                return;
                             }
+
+                            open_deal.addProduct(dp, getApplicationContext());
                             Toast.makeText(MenuOneProductActivity.this,dp.getmName("EN") + " Added",Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -149,7 +152,7 @@ public class MenuOneProductActivity extends BaseActivity {
         if (extras != null) {
             mCategoryId = extras.getInt("id");
             mSender = extras.getString("sender");
-            mDealNameId = extras.getString("dealId");
+            mDealName = extras.getString("dealId");
         }
 
 

@@ -34,7 +34,7 @@ public class MainActivity extends BaseActivity {
                                     int position, long id) {
                 if(position < mImageAdapter.getmTablesPictures().size() ){
                     Intent i = new Intent(MainActivity.this,DealActivity.class);
-                    i.putExtra("dealName", String.valueOf(position));
+                    i.putExtra("dealName", mImageAdapter.getDealName(position));
                     startActivity(i);
 
                 }else if(position == mImageAdapter.getmTablesPictures().size() ){
@@ -54,8 +54,21 @@ public class MainActivity extends BaseActivity {
 
                     editalert.setPositiveButton("Add", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            mImageAdapter.addDeal(input.getText().toString());
-                            mImageAdapter.notifyDataSetChanged();
+                            String deal_name = input.getText().toString();
+                            if(deal_name.substring(0,1).matches("[0-9]")){
+                                final AlertDialog.Builder BadNameAlert = new AlertDialog.Builder(MainActivity.this);
+                                BadNameAlert.setTitle("Bad Deal Name!");
+                                BadNameAlert.setMessage("Deal Name cannot start with digit");
+                                BadNameAlert.setPositiveButton("OK",new DialogInterface.OnClickListener(){
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                            }
+                            else{
+                                mImageAdapter.addDeal(deal_name);
+                                mImageAdapter.notifyDataSetChanged();
+                            }
                         }
                     });
 
@@ -68,6 +81,11 @@ public class MainActivity extends BaseActivity {
             }
 
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override

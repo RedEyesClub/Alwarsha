@@ -21,6 +21,10 @@ import java.util.Map;
 public class Deal {
     DealsProvider mDealProvider;
 
+    private String mOrdersToSend = "";
+
+    private String mDealConclosion = "";
+
     public static enum DEAL_STATUS {
         OPEN("OPEN"),
         CLOSED("CLOSED");
@@ -172,6 +176,22 @@ public class Deal {
     public void setTotalDiscount(float new_discount){
         this.total_discount = new_discount;
         saveInDB();
+    }
+
+    public String getOrdersToSend() {
+        return mOrdersToSend;
+    }
+
+    public void setOrdersToSend(String mOrdersToSend) {
+        this.mOrdersToSend = mOrdersToSend;
+    }
+
+    public String getDealConclosion() {
+        return mDealConclosion;
+    }
+
+    public void setDealConclosion(String mDealConclosion) {
+        this.mDealConclosion = mDealConclosion;
     }
 
     public void close(){

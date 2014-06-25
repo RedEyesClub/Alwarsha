@@ -46,12 +46,14 @@
         android:text="Add"
         android:onClick="add"/>
         <Button
+            android:id="@+id/activityDealSendButton"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_marginTop="5dp"
             android:layout_height="wrap_content"
             android:text="Send"
-            android:onClick="send"/>
+            android:onClick="send"
+            />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -104,6 +106,7 @@
         </LinearLayout>
 
     <Button
+        android:id="@+id/activityDealCloseButton"
         android:layout_width="match_parent"
         android:layout_marginTop="0dp"
         android:layout_height="wrap_content"

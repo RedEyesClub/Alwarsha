@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin" 
+    android:minWidth="354dp">
+
+    <TextView
+        android:id="@+id/errorDialogTiltleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:drawableLeft="@android:drawable/ic_dialog_alert"
+        android:drawablePadding="10dp"
+        android:gravity="bottom"
+        android:text="Invalid Password"
+        android:textColor="@color/Red"
+        android:textSize="20dp" >
+    </TextView>
+
+    <View
+        style="@style/Line"
+        android:background="@color/Red" />
+
+    <TextView
+        android:id="@+id/errorDialogMessageTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="bottom"
+        android:text=""
+        android:textColor="@color/Black"
+        android:textSize="70dp" >
+    </TextView>
+
+    <Button
+        android:id="@+id/errorDialogOkButton"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:clickable="true"
+        android:text="OK"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
+</LinearLayout>

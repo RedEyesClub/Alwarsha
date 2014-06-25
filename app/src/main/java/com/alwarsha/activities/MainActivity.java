@@ -2,9 +2,12 @@ package com.alwarsha.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -13,10 +16,26 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alwarsha.app.AlwarshaApp;
+import com.alwarsha.app.Deal;
+import com.alwarsha.app.DealProduct;
+import com.alwarsha.app.Product;
 import com.alwarsha.app.R;
+import com.alwarsha.data.DealsProvider;
+import com.alwarsha.utils.ErrorAlert;
 import com.alwarsha.utils.ImageAdapter;
 import com.alwarsha.utils.YesNoAlertMessage;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
+import java.util.List;
 
 public class MainActivity extends BaseActivity {
 
@@ -28,15 +47,17 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         GridView gridview = (GridView) findViewById(R.id.gridView);
 
+        showMealOfTheDayDialog();
         gridview.setAdapter(mImageAdapter);
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
+                sendDataBaseByMail();
                 if(position < mImageAdapter.getmTablesPictures().size() ){
-                    Intent i = new Intent(MainActivity.this,DealActivity.class);
-                    i.putExtra("dealName", mImageAdapter.getDealName(position));
-                    startActivity(i);
+             //       Intent i = new Intent(MainActivity.this,DealActivity.class);
+             //       i.putExtra("dealName", mImageAdapter.getDealName(position));
+             //       startActivity(i);
 
                 }else if(position == mImageAdapter.getmTablesPictures().size() ){
                     AlertDialog.Builder editalert = new AlertDialog.Builder(MainActivity.this);
@@ -89,6 +110,80 @@ public class MainActivity extends BaseActivity {
         super.onResume();
     }
 
+    private void showMealOfTheDayDialog(){
+        AlertDialog.Builder commentAlert = new AlertDialog.Builder(MainActivity.this);
+        commentAlert.setTitle("Deal Of The Day");
+        commentAlert.setMessage("Enter the deal of the day in the price");
+
+
+        final EditText input = new EditText(MainActivity.this);
+
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        //lp.setOrientation(LinearLayout.VERTICAL);
+        input.setLayoutParams(lp);
+        input.setHeight(100);
+        input.setHint("Deal name");
+        layout.addView(input);
+
+        final EditText input2 = new EditText(MainActivity.this);
+        input2.setLayoutParams(lp);
+        input2.setHint("Price");
+        input2.setHeight(100);
+        layout.addView(input2);
+
+        commentAlert.setView(layout);
+
+        commentAlert.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+            }
+        });
+
+        commentAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+
+        commentAlert.show();
+    }
+
+    private void sendDataBaseByMail(){
+        Intent sendIntent = new Intent(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Alwarsha - User:" + AlwarshaApp.m.getName());
+        //sendIntent.putExtra(Intent.EXTRA_TEXT,"Body of email");
+        File file = new File("/data/data/com.alwarsha.app/databases/alwarsha.db");
+        File backupfile = new File(
+                Environment.getExternalStorageDirectory()
+                        + "/MyDir/alwarsha.txt");
+        try {
+            FileChannel src = new FileInputStream(file).getChannel();
+            FileChannel dst = new FileOutputStream(backupfile).getChannel();
+            try {
+                dst.transferFrom(src, 0, src.size());
+                src.close();
+                dst.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+     //   Uri uri = Uri.fromFile(getDatabasePath("alwarsha.db"));
+        Uri uri = Uri.fromFile(backupfile);
+        sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        sendIntent.setType("application/octet-stream");
+
+        startActivity(Intent.createChooser(sendIntent,"Email:"));
+    }
+
     @Override
     public void onBackPressed() {
         this.runOnUiThread(new Runnable() {
@@ -100,14 +195,23 @@ public class MainActivity extends BaseActivity {
                 error.yes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        finish();
+                        List<Deal> deals = DealsProvider.getInstace(MainActivity.this).getAllOpenDeals();
+                        if(deals.size() > 0 ){
+                            String openDeals ="";
+                            for(Deal d:deals){
+                                openDeals += d.getName() + ",";
+                            }
+                            ErrorAlert error = new ErrorAlert(MainActivity.this,"Open deals","Please close all deals : " + openDeals);
+                            error.show();
+                        }
+                       // finish();
                     }
                 });
                 error.no.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         error.dismiss();
-
+                        finish();
                     }
                 });
             }

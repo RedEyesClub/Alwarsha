@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -48,7 +49,9 @@ public class DealActivity extends BaseActivity {
     private FileInputStream fileInputStream;
     private ByteArrayInputStream bufferedInputStream;
     private OutputStream outputStream;
-    private String mOrdersToSend = "";
+    private Button mSendButton;
+    private Button mCloseButton;
+   // private String mOrdersToSend = "";
     TextView mCommentTextView;
     TextView mTotalTextView;
     TextView mTotalDisTextView;
@@ -150,6 +153,71 @@ public class DealActivity extends BaseActivity {
         mTotalTextView = (TextView) findViewById(R.id.totalTextView);
         mTotalDisTextView = (TextView) findViewById(R.id.totalDisTextView);
         mProductListView = (ListView) findViewById(R.id.deal_one_product_listView);
+        mSendButton = (Button)findViewById(R.id.activityDealSendButton);
+        mCloseButton = (Button)findViewById(R.id.activityDealCloseButton);
+
+        mSendButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                DealActivity.this.runOnUiThread(new Runnable() {
+                    public void run() {
+                        final YesNoAlertMessage resendDialog = new YesNoAlertMessage(
+                                DealActivity.this, "Resnd", "Are you sure?", null);
+
+
+                        resendDialog.show();
+
+                        resendDialog.yes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                resendDialog.dismiss();
+                                resendLastOrder();
+                            }
+                        });
+                        resendDialog.no.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                resendDialog.dismiss();
+
+                            }
+                        });
+                    }
+                });
+                return false;
+            }
+        });
+
+        mCloseButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                DealActivity.this.runOnUiThread(new Runnable() {
+                    public void run() {
+                        final YesNoAlertMessage resendDialog = new YesNoAlertMessage(
+                                DealActivity.this, "Reclose", "Are you sure?", null);
+
+
+                        resendDialog.show();
+
+                        resendDialog.yes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                resendDialog.dismiss();
+                                sendCloseDeal();
+                            }
+                        });
+                        resendDialog.no.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                resendDialog.dismiss();
+
+                            }
+                        });
+                    }
+                });
+
+                return false;
+            }
+        });
 
         mDiscountEdtitText = (EditText)findViewById(R.id.dealActivityDiscountEditText);
 
@@ -241,13 +309,17 @@ public class DealActivity extends BaseActivity {
         startActivity(i);
     }
 
+    public void resendLastOrder(){
+        new Task().execute(deal.getOrdersToSend());
+    }
+
     public void send(View sendButton) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy - MM - dd HH:mm");
         String currentDateandTime = sdf.format(new Date());
 
-        mOrdersToSend = currentDateandTime + '\r' + '\n' + '\n';
-        mOrdersToSend += "Table number : " + mDealNameId + '\r' + '\n';
-        mOrdersToSend += AlwarshaApp.m.getName() + '\r' + '\n';
+        String ordersToSend = currentDateandTime + '\r' + '\n' + '\n';
+        ordersToSend += "Table number : " + mDealNameId + '\r' + '\n';
+        ordersToSend += AlwarshaApp.m.getName() + '\r' + '\n';
         ArrayList<String> printed = new ArrayList<String>();
         for (DealProduct d : deal.getmProducts()) {
             if (d.getStatus() == DealProduct.DealProductStatus.ORDERED) {
@@ -275,21 +347,14 @@ public class DealActivity extends BaseActivity {
                     sent = mSentProductsCounter.get(d.getmId());
                 }
                 int count = mProductsCounter.get(d.getmId()) - sent;
-                mOrdersToSend += d.getmName("EN") + '\t' + count + '\r' + '\n';
+                ordersToSend += d.getmName("EN") + '\t' + count + '\r' + '\n';
                 printed.add(d.getmName("EN"));
             }
             d.setStatus(DealProduct.DealProductStatus.SENT);
         }
 
-//        for (Map.Entry<DealProduct, Integer> entry : mProducts.entrySet()) {
-//            DealProduct key = entry.getKey();
-//            Integer value = entry.getValue();
-//
-//            if (key.getStatus() == DealProduct.DealProductStatus.ORDERED) {
-//                mOrdersToSend += key.getmName("EN") + '\t' + value + '\r' + '\n';
-//            }
-//        }
-        new Task().execute(mOrdersToSend);
+        deal.setOrdersToSend(ordersToSend);
+        new Task().execute(ordersToSend);
     }
 
     public  void setDealComment(View SetCommentButton){

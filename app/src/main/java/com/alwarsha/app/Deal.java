@@ -119,8 +119,8 @@ public class Deal {
         this.myContext = myContext;
     }
 
-    private void saveInDB(){
-        DealsProvider dp = DealsProvider.getInstace(this.myContext);
+    private void saveInDB(Context context){
+        DealsProvider dp = DealsProvider.getInstace(context);
         dp.updateDeal(this);
     }
 
@@ -136,12 +136,12 @@ public class Deal {
 
         this.total += product.getmPrice();
 
-        saveInDB();
+        saveInDB(context);
 
         return true;
     }
 
-    public DealProduct.DealProductStatus delete_product(int product_id){
+    public DealProduct.DealProductStatus delete_product(int product_id, Context context){
         DealProduct dealProduct = null;
         for(DealProduct dp: mProducts ){
             if((dp.getmId() == product_id) && (dp.getStatus() == DealProduct.DealProductStatus.ORDERED)){
@@ -160,22 +160,23 @@ public class Deal {
         if(dealProduct == null){
             return null;
         }
-        DealsProductProvider dpp = DealsProductProvider.getInstace(myContext);
+        DealsProductProvider dpp = DealsProductProvider.getInstace(context);
         dpp.deleteDealProduct(dealProduct.getId());
         DealProduct.DealProductStatus ret_val = dealProduct.getStatus();
 
+        dpp.deleteDealProduct(dealProduct.getId());
         mProducts.remove(dealProduct);
         return ret_val;
     }
 
-    public void setDealComment(String new_comment){
+    public void setDealComment(String new_comment, Context context){
         this.comment = new_comment;
-        saveInDB();
+        saveInDB(context);
     }
 
-    public void setTotalDiscount(float new_discount){
+    public void setTotalDiscount(float new_discount, Context context){
         this.total_discount = new_discount;
-        saveInDB();
+        saveInDB(context);
     }
 
     public String getOrdersToSend() {
@@ -194,13 +195,13 @@ public class Deal {
         this.mDealConclosion = mDealConclosion;
     }
 
-    public void close(){
+    public void close(Context context){
         if(status == DEAL_STATUS.CLOSED){
             return;
         }
         this.status = DEAL_STATUS.CLOSED;
         this.close = new Date();
-        saveInDB();
+        saveInDB(context);
     }
 
     public String getName() {

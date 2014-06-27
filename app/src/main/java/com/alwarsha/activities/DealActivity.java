@@ -74,15 +74,17 @@ public class DealActivity extends BaseActivity {
                                 for (DealProduct d : deal.getmProducts()) {
                                     String productId = productIdView.getText().toString();
                                     if (Integer.valueOf(productId) == d.getmId()) {
-                                        // if (d.getStatus() == DealProduct.DealProductStatus.ORDERED) {
-                                        DealProduct.DealProductStatus status = deal.delete_product(d.getDeal_id());
-                                        if (status == DealProduct.DealProductStatus.SENT) {
-                                            sendRemoveProduct(d.getmName("EN"));
-                                        }
-                                        initProductsHashMap();
-                                        mAdapter.notifyDataSetChanged();
-                                        break;
-                                        //  }
+
+                                       // if (d.getStatus() == DealProduct.DealProductStatus.ORDERED) {
+                                            DealProduct.DealProductStatus status = deal.delete_product(d.getmId(), getApplicationContext());
+                                            if(status == DealProduct.DealProductStatus.SENT){
+                                                sendRemoveProduct(d.getmName("EN"));
+                                            }
+                                            initProductsHashMap();
+                                            mAdapter.notifyDataSetChanged();
+                                            break;
+                                      //  }
+
                                     }
                                 }
                             }
@@ -363,7 +365,7 @@ public class DealActivity extends BaseActivity {
                     productCounter = 1;
                 }
                 sendBroducts.put(dd.getmName("EN"), productCounter);
-                dd.setStatus(DealProduct.DealProductStatus.SENT);
+                dd.setStatus(DealProduct.DealProductStatus.SENT,getApplicationContext());
             }
         }
 
@@ -372,6 +374,7 @@ public class DealActivity extends BaseActivity {
             Integer value = entry.getValue();
             // ...
             ordersToSend += key + "\t" + value + "\n";
+
         }
 
         deal.setOrdersToSend(ordersToSend);
@@ -385,8 +388,8 @@ public class DealActivity extends BaseActivity {
     public void setDealComment(View SetCommentButton) {
         this.runOnUiThread(new Runnable() {
             public void run() {
-                EditText comment = (EditText) findViewById(R.id.dealActivityCommentEditText);
-                deal.setDealComment(comment.getText().toString());
+                EditText comment = (EditText)findViewById(R.id.dealActivityCommentEditText);
+                deal.setDealComment(comment.getText().toString(), getApplicationContext());
             }
         });
     }
@@ -404,7 +407,7 @@ public class DealActivity extends BaseActivity {
                 error.yes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        deal.close();
+                        deal.close(getApplicationContext());
                         error.dismiss();
                         sendCloseDeal();
                         finish();
@@ -463,7 +466,7 @@ public class DealActivity extends BaseActivity {
                 dealClose += d.getmName("EN") + '\t' + count + '\r' + '\n';
                 printed.add(d.getmName("EN"));
             }
-            d.setStatus(DealProduct.DealProductStatus.SENT);
+            d.setStatus(DealProduct.DealProductStatus.SENT,getApplicationContext());
         }
 
         dealClose += "---- Total =  " + deal.getTotal() + '\r' + '\n';

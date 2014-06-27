@@ -220,6 +220,50 @@ public class DealsProvider {
         return open_deals;
     }
 
+    public List<Deal> getAllClosedDeals(){
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        List<Deal> closed_deals = new ArrayList<Deal>();
+        DealsProductProvider dpp = DealsProductProvider.getInstace(mContext);
+
+
+        try {
+            db = mDbHelper.getReadableDatabase();
+            cursor = db.query(DatabaseHelper.TABLE_DEALS, mAllColumns,
+                    DatabaseHelper.TABLE_DEAL_STATUS + "=? "
+                    ,new String[]{ Deal.DEAL_STATUS.CLOSED.toString()}, null, null, null, null);
+        } catch (NullPointerException e) {
+            if (AlwarshaApp.DEBUG)
+                Log.e(TAG, "Exception at getOpenDealByName");
+        }
+
+        if (cursor.moveToFirst()) {
+            for(int i=0; i< cursor.getCount(); i++){
+                Deal closed_deal = new Deal();
+                closed_deal.setId(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.TABLE_DEAL_ID)));
+                closed_deal.setName(cursor.getString(cursor.getColumnIndex(DatabaseHelper.TABLE_DEAL_NAME)));
+                SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
+                try{
+                    closed_deal.setOpen(format.parse(cursor.getString(cursor.getColumnIndex(DatabaseHelper.TABLE_DEAL_OPEN_TIME))));
+                    closed_deal.setClose(format.parse(cursor.getString(cursor.getColumnIndex(DatabaseHelper.TABLE_DEAL_CLOSE_TIME))));
+                }
+                catch(Exception ex){
+                    Log.d("getAllClosedDeals","parsing date exception");
+                }
+                closed_deal.setStatus(Deal.DEAL_STATUS.fromString(cursor.getString(cursor.getColumnIndex(DatabaseHelper.TABLE_DEAL_STATUS))));
+                closed_deal.setComment(cursor.getString(cursor.getColumnIndex(DatabaseHelper.TABLE_DEAL_COMMENT)));
+                closed_deal.setTotal(Integer.valueOf(cursor.getString(cursor.getColumnIndex(DatabaseHelper.TABLE_DEAL_TOTAL))));
+                closed_deal.setTotal_discount(Integer.valueOf(cursor.getString(cursor.getColumnIndex(DatabaseHelper.TABLE_DEAL_DISCOUNT))));
+                closed_deal.setmProducts(dpp.getDealProductsByDealId(closed_deal.getId()));
+                closed_deals.add(closed_deal);
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+
+        return closed_deals;
+    }
+
     public List<Deal> getClosedDealsByName(String name){
         SQLiteDatabase db = null;
         Cursor cursor = null;

@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,12 +72,15 @@ public class DealActivity extends BaseActivity {
                                 for (DealProduct d : deal.getmProducts()) {
                                     String productId = productIdView.getText().toString();
                                     if (Integer.valueOf(productId) == d.getmId()) {
-                                        if (d.getStatus() == DealProduct.DealProductStatus.ORDERED) {
-                                            deal.getmProducts().remove(d);
+                                       // if (d.getStatus() == DealProduct.DealProductStatus.ORDERED) {
+                                            DealProduct.DealProductStatus status = deal.delete_product(d.getDeal_id());
+                                            if(status == DealProduct.DealProductStatus.SENT){
+                                                sendRemoveProduct(d.getmName("EN"));
+                                            }
                                             initProductsHashMap();
                                             mAdapter.notifyDataSetChanged();
                                             break;
-                                        }
+                                      //  }
                                     }
                                 }
                             }
@@ -290,16 +292,25 @@ public class DealActivity extends BaseActivity {
             Integer productCounter = mProductsCounter.get(d.getmId());
             if (d.getComment() != null && d.getComment().trim().length() > 0) {
                 productCounter = 1;
-                mProductsCounter.put(d.getmId(), productCounter);
+                mProductsCounter.put(d.getmId() + hashString(d.getComment()), productCounter);
                 continue;
             } else if (productCounter != null) {
                 productCounter++;
+                mProductsCounter.put(d.getmId(), productCounter);
             } else {
                 productCounter = 1;
+                mProductsCounter.put(d.getmId(), productCounter);
             }
-            mProductsCounter.put(d.getmId(), productCounter);
 
         }
+    }
+
+    private int hashString(String comment){
+        int hash=7;
+        for (int i=0; i < comment.length(); i++) {
+            hash = hash*31+comment.charAt(i);
+        }
+        return hash;
     }
 
     public void add(View addButton) {
@@ -310,7 +321,20 @@ public class DealActivity extends BaseActivity {
     }
 
     public void resendLastOrder(){
-        new Task().execute(deal.getOrdersToSend());
+        String resentText = "******** Resend ********\n" + deal.getOrdersToSend();
+        new sendToPrinterTask().execute(deal.getOrdersToSend());
+    }
+
+    public void sendRemoveProduct(String product){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy - MM - dd HH:mm");
+        String currentDateandTime = "&&&&   Remove    &&&&\n" + sdf.format(new Date());
+
+        String ordersToSend = currentDateandTime + '\r' + '\n' + '\n';
+        ordersToSend += "Table number : " + mDealNameId + '\r' + '\n';
+        ordersToSend += AlwarshaApp.m.getName() + '\r' + '\n';
+        ordersToSend += product + '\t' + '\r' + '\n';
+        new sendToPrinterTask().execute(ordersToSend);
+
     }
 
     public void send(View sendButton) {
@@ -354,7 +378,8 @@ public class DealActivity extends BaseActivity {
         }
 
         deal.setOrdersToSend(ordersToSend);
-        new Task().execute(ordersToSend);
+        ordersToSend +='\u001a';
+        new sendToPrinterTask().execute(ordersToSend);
     }
 
     public  void setDealComment(View SetCommentButton){
@@ -443,29 +468,17 @@ public class DealActivity extends BaseActivity {
         dealClose+="---- Total after discount =  " + String.valueOf(deal.getTotal() - deal.getTotal_discount()) + '\r' + '\n';
 
 
-//        for (Map.Entry<DealProduct, Integer> entry : mProducts.entrySet()) {
-//            DealProduct key = entry.getKey();
-//            Integer value = entry.getValue();
-//
-//            if (key.getStatus() == DealProduct.DealProductStatus.ORDERED) {
-//                mOrdersToSend += key.getmName("EN") + '\t' + value + '\r' + '\n';
-//            }
-//        }
-        new Task().execute(dealClose);
+        new sendToPrinterTask().execute(dealClose);
     }
 
-    private class Task extends
+    private class sendToPrinterTask extends
             AsyncTask<String, Void, Void> {
-        @Override
-        protected void onPreExecute() {
-            Log.d("fdsa", "fadf");
-        }
 
         @Override
         protected Void doInBackground(String... arg0) {
-            try {
 
-                Log.d("FFF",arg0[0]);
+            try {
+                arg0[0] += "\n" + "\n" + "\n" + "\u001b"+"\u0069";
                 int textLength = arg0[0].length();
 
                 Socket client = new Socket("192.168.1.19", 9100);

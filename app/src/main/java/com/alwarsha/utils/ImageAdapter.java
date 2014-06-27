@@ -58,7 +58,7 @@ public class ImageAdapter extends BaseAdapter {
     }
 
     public int getCount() {
-        return mTablesPictures.size() + 2;
+        return mTablesPictures.size() + 3;
     }
 
     public Object getItem(int position) {
@@ -92,6 +92,9 @@ public class ImageAdapter extends BaseAdapter {
         }else if(position == mTablesPictures.size() + 1){
             tableTextView.setText("Menu");
             tableImage.setImageResource(mSpecialThumps[1]);
+        }else if(position == mTablesPictures.size() + 2){
+            tableTextView.setText("Closed Deals");
+            tableImage.setImageResource(mSpecialThumps[2]);
         }
 
         return returnedValue;
@@ -105,6 +108,7 @@ public class ImageAdapter extends BaseAdapter {
 
     private Integer[] mSpecialThumps = {
             R.drawable.plus_add_green,
-            R.drawable.menu
+            R.drawable.menu,
+            R.drawable.closed
     };
 }

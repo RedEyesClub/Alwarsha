@@ -33,8 +33,10 @@ import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DealActivity extends BaseActivity {
 
@@ -50,14 +52,14 @@ public class DealActivity extends BaseActivity {
     private OutputStream outputStream;
     private Button mSendButton;
     private Button mCloseButton;
-   // private String mOrdersToSend = "";
+    // private String mOrdersToSend = "";
     TextView mCommentTextView;
     TextView mTotalTextView;
     TextView mTotalDisTextView;
     ListView mProductListView;
     LinkedHashMap<Integer, Integer> mProductsCounter = new LinkedHashMap<Integer, Integer>();
     LinkedHashMap<Integer, Integer> mSentProductsCounter = new LinkedHashMap<Integer, Integer>();
-    private EditText  mDiscountEdtitText;
+    private EditText mDiscountEdtitText;
 
     private BaseAdapter mAdapter = new BaseAdapter() {
         private View.OnClickListener mOnButtonClicked = new View.OnClickListener() {
@@ -72,15 +74,15 @@ public class DealActivity extends BaseActivity {
                                 for (DealProduct d : deal.getmProducts()) {
                                     String productId = productIdView.getText().toString();
                                     if (Integer.valueOf(productId) == d.getmId()) {
-                                       // if (d.getStatus() == DealProduct.DealProductStatus.ORDERED) {
-                                            DealProduct.DealProductStatus status = deal.delete_product(d.getDeal_id());
-                                            if(status == DealProduct.DealProductStatus.SENT){
-                                                sendRemoveProduct(d.getmName("EN"));
-                                            }
-                                            initProductsHashMap();
-                                            mAdapter.notifyDataSetChanged();
-                                            break;
-                                      //  }
+                                        // if (d.getStatus() == DealProduct.DealProductStatus.ORDERED) {
+                                        DealProduct.DealProductStatus status = deal.delete_product(d.getDeal_id());
+                                        if (status == DealProduct.DealProductStatus.SENT) {
+                                            sendRemoveProduct(d.getmName("EN"));
+                                        }
+                                        initProductsHashMap();
+                                        mAdapter.notifyDataSetChanged();
+                                        break;
+                                        //  }
                                     }
                                 }
                             }
@@ -155,8 +157,8 @@ public class DealActivity extends BaseActivity {
         mTotalTextView = (TextView) findViewById(R.id.totalTextView);
         mTotalDisTextView = (TextView) findViewById(R.id.totalDisTextView);
         mProductListView = (ListView) findViewById(R.id.deal_one_product_listView);
-        mSendButton = (Button)findViewById(R.id.activityDealSendButton);
-        mCloseButton = (Button)findViewById(R.id.activityDealCloseButton);
+        mSendButton = (Button) findViewById(R.id.activityDealSendButton);
+        mCloseButton = (Button) findViewById(R.id.activityDealCloseButton);
 
         mSendButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -221,16 +223,20 @@ public class DealActivity extends BaseActivity {
             }
         });
 
-        mDiscountEdtitText = (EditText)findViewById(R.id.dealActivityDiscountEditText);
+        mDiscountEdtitText = (EditText) findViewById(R.id.dealActivityDiscountEditText);
 
         mDiscountEdtitText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus == true) {
 
                 } else {
-                    int discountPercent =Integer.valueOf( mDiscountEdtitText.getText().toString());
-                    String total = "Toatal Discount = " + String.valueOf(deal.getTotal() - deal.getTotal() *discountPercent/100 );
-                    mTotalDisTextView.setText(total);
+                    try {
+                        int discountPercent = Integer.valueOf(mDiscountEdtitText.getText().toString());
+                        String total = "Toatal Discount = " + String.valueOf(deal.getTotal() - deal.getTotal() * discountPercent / 100);
+                        mTotalDisTextView.setText(total);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
                 }
 
@@ -258,17 +264,16 @@ public class DealActivity extends BaseActivity {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
 
-        try{
+        try {
             deal = new Deal(mDealNameId, getApplicationContext());
-        }
-        catch(Exception ex){
-            if(ex.getMessage().equals("OPEN Deal with same name already exist in DB")){
+        } catch (Exception ex) {
+            if (ex.getMessage().equals("OPEN Deal with same name already exist in DB")) {
                 DealsProvider dp = DealsProvider.getInstace(DealActivity.this);
                 deal = dp.getOpenDealByName(mDealNameId);
             }
         }
 
-        if((deal.getmProducts() != null) && (deal.getmProducts().size() > 0)){
+        if ((deal.getmProducts() != null) && (deal.getmProducts().size() > 0)) {
             mProductListView.setAdapter(mAdapter);
         }
 
@@ -276,7 +281,7 @@ public class DealActivity extends BaseActivity {
 
         mTotalTextView.setText("Total = " + deal.getTotal());
         mTotalDisTextView.setText("Total Dis = " + deal.getTotal_discount());
-        if(deal.getComment() != null){
+        if (deal.getComment() != null) {
             mCommentTextView.setText(deal.getComment());
         }
         super.onResume();
@@ -285,7 +290,7 @@ public class DealActivity extends BaseActivity {
     private void initProductsHashMap() {
         if (mProductsCounter.size() > 0)
             mProductsCounter.clear();
-        if(deal.getmProducts() == null){
+        if (deal.getmProducts() == null) {
             return;
         }
         for (DealProduct d : deal.getmProducts()) {
@@ -305,10 +310,10 @@ public class DealActivity extends BaseActivity {
         }
     }
 
-    private int hashString(String comment){
-        int hash=7;
-        for (int i=0; i < comment.length(); i++) {
-            hash = hash*31+comment.charAt(i);
+    private int hashString(String comment) {
+        int hash = 7;
+        for (int i = 0; i < comment.length(); i++) {
+            hash = hash * 31 + comment.charAt(i);
         }
         return hash;
     }
@@ -320,12 +325,12 @@ public class DealActivity extends BaseActivity {
         startActivity(i);
     }
 
-    public void resendLastOrder(){
+    public void resendLastOrder() {
         String resentText = "******** Resend ********\n" + deal.getOrdersToSend();
         new sendToPrinterTask().execute(deal.getOrdersToSend());
     }
 
-    public void sendRemoveProduct(String product){
+    public void sendRemoveProduct(String product) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy - MM - dd HH:mm");
         String currentDateandTime = "&&&&   Remove    &&&&\n" + sdf.format(new Date());
 
@@ -340,52 +345,47 @@ public class DealActivity extends BaseActivity {
     public void send(View sendButton) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy - MM - dd HH:mm");
         String currentDateandTime = sdf.format(new Date());
-
+        boolean sendToPrint = false;
         String ordersToSend = currentDateandTime + '\r' + '\n' + '\n';
         ordersToSend += "Table number : " + mDealNameId + '\r' + '\n';
         ordersToSend += AlwarshaApp.m.getName() + '\r' + '\n';
         ArrayList<String> printed = new ArrayList<String>();
-        for (DealProduct d : deal.getmProducts()) {
-            if (d.getStatus() == DealProduct.DealProductStatus.ORDERED) {
-                for (DealProduct dd : deal.getmProducts()) {
-                    Integer productCounter = mSentProductsCounter.get(d.getmId());
-                    if (productCounter != null) {
-                        productCounter++;
-                    } else {
-                        productCounter = 1;
-                    }
-                    mSentProductsCounter.put(d.getmId(), productCounter);
+
+        HashMap<String, Integer> sendBroducts = new HashMap<String, Integer>();
+
+        for (DealProduct dd : deal.getmProducts()) {
+            if (dd.getStatus() == DealProduct.DealProductStatus.ORDERED) {
+                sendToPrint = true;
+                Integer productCounter = sendBroducts.get(dd.getmName("EN"));
+                if (productCounter != null) {
+                    productCounter++;
+                } else {
+                    productCounter = 1;
                 }
-                continue;
+                sendBroducts.put(dd.getmName("EN"), productCounter);
+                dd.setStatus(DealProduct.DealProductStatus.SENT);
             }
-            boolean found = false;
-            for (String s : printed) {
-                if (s.equals(d.getmName("EN"))) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                int sent = 0;
-                if (mSentProductsCounter.get(d.getmId()) != null) {
-                    sent = mSentProductsCounter.get(d.getmId());
-                }
-                int count = mProductsCounter.get(d.getmId()) - sent;
-                ordersToSend += d.getmName("EN") + '\t' + count + '\r' + '\n';
-                printed.add(d.getmName("EN"));
-            }
-            d.setStatus(DealProduct.DealProductStatus.SENT);
+        }
+
+        for (Map.Entry<String, Integer> entry : sendBroducts.entrySet()) {
+            String key = entry.getKey();
+            Integer value = entry.getValue();
+            // ...
+            ordersToSend += key + "\t" + value + "\n";
         }
 
         deal.setOrdersToSend(ordersToSend);
-        ordersToSend +='\u001a';
-        new sendToPrinterTask().execute(ordersToSend);
+        ordersToSend += '\u001a';
+        if (sendToPrint) {
+            new sendToPrinterTask().execute(ordersToSend);
+            sendToPrint = false;
+        }
     }
 
-    public  void setDealComment(View SetCommentButton){
+    public void setDealComment(View SetCommentButton) {
         this.runOnUiThread(new Runnable() {
             public void run() {
-                EditText comment = (EditText)findViewById(R.id.dealActivityCommentEditText);
+                EditText comment = (EditText) findViewById(R.id.dealActivityCommentEditText);
                 deal.setDealComment(comment.getText().toString());
             }
         });
@@ -421,13 +421,15 @@ public class DealActivity extends BaseActivity {
         });
     }
 
-    private void sendCloseDeal(){
+    private void sendCloseDeal() {
+        if (deal.getmProducts().size() == 0)
+            return;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy - MM - dd HH:mm");
         String currentDateandTime = sdf.format(new Date());
         LinkedHashMap<Integer, Integer> sentProductsCounter = new LinkedHashMap<Integer, Integer>();
 
-        String dealClose = "+++++++++++++++++++++++++++++++" + '\r'  + '\n';
-        dealClose += "Close deal" + '\r'  + '\n';
+        String dealClose = "+++++++++++++++++++++++++++++++" + '\r' + '\n';
+        dealClose += "Close deal" + '\r' + '\n';
         dealClose += currentDateandTime + '\r' + '\n' + '\n';
         dealClose += "Table number : " + mDealNameId + '\r' + '\n';
         dealClose += AlwarshaApp.m.getName() + '\r' + '\n';
@@ -464,8 +466,8 @@ public class DealActivity extends BaseActivity {
             d.setStatus(DealProduct.DealProductStatus.SENT);
         }
 
-        dealClose+="---- Total =  " + deal.getTotal() + '\r' + '\n';
-        dealClose+="---- Total after discount =  " + String.valueOf(deal.getTotal() - deal.getTotal_discount()) + '\r' + '\n';
+        dealClose += "---- Total =  " + deal.getTotal() + '\r' + '\n';
+        dealClose += "---- Total after discount =  " + String.valueOf(deal.getTotal() - deal.getTotal_discount()) + '\r' + '\n';
 
 
         new sendToPrinterTask().execute(dealClose);
@@ -478,7 +480,7 @@ public class DealActivity extends BaseActivity {
         protected Void doInBackground(String... arg0) {
 
             try {
-                arg0[0] += "\n" + "\n" + "\n" + "\u001b"+"\u0069";
+                arg0[0] += "\n" + "\n" + "\n" + "\u001b" + "\u0069";
                 int textLength = arg0[0].length();
 
                 Socket client = new Socket("192.168.1.19", 9100);

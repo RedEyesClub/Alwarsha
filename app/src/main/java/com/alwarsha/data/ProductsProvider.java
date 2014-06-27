@@ -98,14 +98,14 @@ public class ProductsProvider {
         String name_en = product.getmName("EN");
         if(name_en != null)
         {
-            cv.put(DatabaseHelper.TABLE_PRODUCT_NAME, product.getmName("EN"));
+            cv.put(DatabaseHelper.TABLE_PRODUCT_NAME, name_en);
         }
         String name_ar = product.getmName("AR");
         if(name_ar != null)
         {
-            cv.put(DatabaseHelper.TABLE_PRODUCT_NAME_AR, product.getmName("AR"));
+            cv.put(DatabaseHelper.TABLE_PRODUCT_NAME_AR, name_ar);
         }
-        cv.put(DatabaseHelper.TABLE_PRODUCT_NAME, product.getmName("AR"));
+
         cv.put(DatabaseHelper.TABLE_PRODUCT_CATEGORY_ID, product.getmCategoryId());
         cv.put(DatabaseHelper.TABLE_PRODUCT_PIC_NAME, product.getmPictureName());
         cv.put(DatabaseHelper.TABLE_PRODUCT_PRICE, product.getmPrice());

@@ -14,8 +14,10 @@ import android.widget.LinearLayout;
 
 import com.alwarsha.app.AlwarshaApp;
 import com.alwarsha.app.Deal;
+import com.alwarsha.app.Product;
 import com.alwarsha.app.R;
 import com.alwarsha.data.DealsProvider;
+import com.alwarsha.data.ProductsProvider;
 import com.alwarsha.utils.ErrorAlert;
 import com.alwarsha.utils.ImageAdapter;
 import com.alwarsha.utils.YesNoAlertMessage;
@@ -38,7 +40,6 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         GridView gridview = (GridView) findViewById(R.id.gridView);
 
-        showMealOfTheDayDialog();
         gridview.setAdapter(mImageAdapter);
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -104,49 +105,6 @@ public class MainActivity extends BaseActivity {
         super.onResume();
     }
 
-    private void showMealOfTheDayDialog(){
-        AlertDialog.Builder commentAlert = new AlertDialog.Builder(MainActivity.this);
-        commentAlert.setTitle("Deal Of The Day");
-        commentAlert.setMessage("Enter the deal of the day in the price");
-
-
-        final EditText input = new EditText(MainActivity.this);
-
-        LinearLayout layout = new LinearLayout(this);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        //lp.setOrientation(LinearLayout.VERTICAL);
-        input.setLayoutParams(lp);
-        input.setHeight(100);
-        input.setHint("Deal name");
-        layout.addView(input);
-
-        final EditText input2 = new EditText(MainActivity.this);
-        input2.setLayoutParams(lp);
-        input2.setHint("Price");
-        input2.setHeight(100);
-        layout.addView(input2);
-
-        commentAlert.setView(layout);
-
-        commentAlert.setPositiveButton("Add", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-            }
-        });
-
-        commentAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-
-
-        commentAlert.show();
-    }
-
     private void sendDataBaseByMail(){
         Intent sendIntent = new Intent(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Alwarsha - User:" + AlwarshaApp.m.getName());
@@ -202,7 +160,6 @@ public class MainActivity extends BaseActivity {
                             sendDataBaseByMail();
                             finish();
                         }
-                       // finish();
                     }
                 });
                 error.no.setOnClickListener(new View.OnClickListener() {

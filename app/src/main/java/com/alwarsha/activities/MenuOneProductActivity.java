@@ -32,28 +32,28 @@ public class MenuOneProductActivity extends BaseActivity {
     private static String TAG = "MenuOneProductActivity";
     private int mCategoryId;
     private String mSender;
-    private String mDealName ="0";
+    private String mDealName = "0";
     List<Product> mProductsList = new ArrayList<Product>();
 
     private BaseAdapter mAdapter = new BaseAdapter() {
         private View.OnClickListener mOnButtonClicked = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mSender != null){
-                    TextView product = (TextView)v.findViewById(R.id.productId);
-                    int productId  = Integer.valueOf(product.getText().toString());
+                if (mSender != null) {
+                    TextView product = (TextView) v.findViewById(R.id.productId);
+                    int productId = Integer.valueOf(product.getText().toString());
                     Product p = mProductsList.get(productId);
                     DealProduct dp = new DealProduct(p, DealProduct.DealProductStatus.ORDERED);
                     DealsProvider deals_provider = DealsProvider.getInstace(getApplicationContext());
 
                     Deal open_deal = deals_provider.getOpenDealByName(mDealName);
-                    if(open_deal == null){
+                    if (open_deal == null) {
                         return;
                     }
 
                     open_deal.addProduct(dp, getApplicationContext());
 
-                    Toast.makeText(MenuOneProductActivity.this,dp.getmName("EN") + " Added",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MenuOneProductActivity.this, dp.getmName("EN") + " Added", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -77,21 +77,21 @@ public class MenuOneProductActivity extends BaseActivity {
 
                 commentAlert.setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        if(mSender != null){
-                            TextView product = (TextView)v.findViewById(R.id.productId);
-                            int productId  = Integer.valueOf(product.getText().toString());
+                        if (mSender != null) {
+                            TextView product = (TextView) v.findViewById(R.id.productId);
+                            int productId = Integer.valueOf(product.getText().toString());
                             Product p = mProductsList.get(productId);
                             DealProduct dp = new DealProduct(p, DealProduct.DealProductStatus.ORDERED);
                             dp.setComment(input.getText().toString());
                             DealsProvider deals_provider = DealsProvider.getInstace(getApplicationContext());
 
                             Deal open_deal = deals_provider.getOpenDealByName(mDealName);
-                            if(open_deal == null){
+                            if (open_deal == null) {
                                 return;
                             }
 
                             open_deal.addProduct(dp, getApplicationContext());
-                            Toast.makeText(MenuOneProductActivity.this,dp.getmName("EN") + " Added",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MenuOneProductActivity.this, dp.getmName("EN") + " Added", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -109,9 +109,10 @@ public class MenuOneProductActivity extends BaseActivity {
                 return false;
             }
         };
+
         @Override
         public int getCount() {
-            return mProductsList.size();
+            return mProductsList.size() + 1;
         }
 
         @Override
@@ -126,21 +127,94 @@ public class MenuOneProductActivity extends BaseActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View returnedValue;
-            returnedValue = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_item, null);
-            TextView productIdTextView = (TextView)returnedValue.findViewById(R.id.productId);
-            productIdTextView.setText(String.valueOf(position));
-            TextView productName = (TextView)returnedValue.findViewById(R.id.producrOneItemNameTextView);
-            //TODO:Farid,  need to know wich language
-            productName.setText(mProductsList.get(position).getmName("EN"));
-            ImageView productImage =(ImageView)returnedValue.findViewById(R.id.productOneItemImageView);
-            productImage.setImageBitmap(Utils.getBitmapFromStorage(mProductsList.get(position).getmPictureName()));
-            returnedValue.setOnClickListener(mOnButtonClicked);
-            returnedValue.setOnLongClickListener(mOnItemLongClicked);
-            return returnedValue;
+            View returnedValue = null;
+            if (position == mProductsList.size()) {
+                returnedValue = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_item, null);
+                TextView productIdTextView = (TextView) returnedValue.findViewById(R.id.productId);
+              //  productIdTextView.setText(String.valueOf(position));
+                TextView productName = (TextView) returnedValue.findViewById(R.id.producrOneItemNameTextView);
+                //TODO:Farid,  need to know wich language
+                productName.setText("Add new product");
+                ImageView productImage = (ImageView) returnedValue.findViewById(R.id.productOneItemImageView);
+                productImage.setImageDrawable(getResources().getDrawable(R.drawable.add_product));
+                returnedValue.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        showMealOfTheDayDialog();
+                    }
+                });
+            } else {
+                returnedValue = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_item, null);
+                TextView productIdTextView = (TextView) returnedValue.findViewById(R.id.productId);
+                TextView productPriceTextView = (TextView)returnedValue.findViewById(R.id.producrOneItemPriceLoTextView);
+                productIdTextView.setText(String.valueOf(position));
+                productPriceTextView.setText(String.valueOf(mProductsList.get(position).getmPrice()) + " Shekel");
+                TextView productName = (TextView) returnedValue.findViewById(R.id.producrOneItemNameTextView);
+                //TODO:Farid,  need to know wich language
+                productName.setText(mProductsList.get(position).getmName("EN"));
+                ImageView productImage = (ImageView) returnedValue.findViewById(R.id.productOneItemImageView);
+                productImage.setImageBitmap(Utils.getBitmapFromStorage(mProductsList.get(position).getmPictureName()));
+                returnedValue.setOnClickListener(mOnButtonClicked);
+                returnedValue.setOnLongClickListener(mOnItemLongClicked);
 
+            }
+            return returnedValue;
         }
+
     };
+
+    private void showMealOfTheDayDialog(){
+        AlertDialog.Builder commentAlert = new AlertDialog.Builder(MenuOneProductActivity.this);
+        commentAlert.setTitle("Add product");
+        commentAlert.setMessage("Enter new product and price");
+
+
+        final EditText input = new EditText(MenuOneProductActivity.this);
+
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        input.setHeight(100);
+        input.setHint("Deal name");
+        layout.addView(input);
+
+        final EditText input2 = new EditText(MenuOneProductActivity.this);
+        input2.setLayoutParams(lp);
+        input2.setHint("Price");
+        input2.setHeight(100);
+        layout.addView(input2);
+
+        commentAlert.setView(layout);
+
+        commentAlert.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                ProductsProvider p = ProductsProvider.getInstace(MenuOneProductActivity.this);
+
+                Product product = new Product(mCategoryId * 1000 + mAdapter.getCount(),
+                        input.getText().toString(),
+                        mCategoryId,
+                        input.getText().toString(),
+                        Float.valueOf(input2.getText().toString()),
+                        "EN");
+                p.insertNewProduct(product);
+
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+
+        commentAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+
+        commentAlert.show();
+    }
 
 
     @Override
@@ -156,9 +230,9 @@ public class MenuOneProductActivity extends BaseActivity {
         }
 
 
-        mApp =  AlwarshaApp.getInstance();
+        mApp = AlwarshaApp.getInstance();
         ListView drinksListView = (ListView) findViewById(R.id.oneProductListView);
-        if(mCategoryId > -1){
+        if (mCategoryId > -1) {
             ProductsProvider provider = ProductsProvider.getInstace(this);
             mProductsList = provider.getProductsCategory(String.valueOf(mCategoryId));
         }

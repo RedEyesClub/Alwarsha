@@ -1,5 +1,9 @@
 package com.alwarsha.app;
 
+import android.content.Context;
+
+import com.alwarsha.data.DealsProductProvider;
+
 /**
  * Created by Farid on 5/5/14.
  */
@@ -68,8 +72,9 @@ public class DealProduct extends Product {
         return mStatus;
     }
 
-    public void setStatus(DealProductStatus mStatus) {
+    public void setStatus(DealProductStatus mStatus, Context context) {
         this.mStatus = mStatus;
+        saveInDB(context);
     }
 
 
@@ -82,4 +87,8 @@ public class DealProduct extends Product {
         this.mComment = comment;
     }
 
+    private void saveInDB(Context context){
+        DealsProductProvider dpp = DealsProductProvider.getInstace(context);
+        dpp.updateDealProduct(this);
+    }
 }

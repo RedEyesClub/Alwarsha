@@ -73,7 +73,7 @@ public class DealActivity extends BaseActivity {
                                     String productId = productIdView.getText().toString();
                                     if (Integer.valueOf(productId) == d.getmId()) {
                                        // if (d.getStatus() == DealProduct.DealProductStatus.ORDERED) {
-                                            DealProduct.DealProductStatus status = deal.delete_product(d.getDeal_id());
+                                            DealProduct.DealProductStatus status = deal.delete_product(d.getmId(), getApplicationContext());
                                             if(status == DealProduct.DealProductStatus.SENT){
                                                 sendRemoveProduct(d.getmName("EN"));
                                             }
@@ -374,7 +374,7 @@ public class DealActivity extends BaseActivity {
                 ordersToSend += d.getmName("EN") + '\t' + count + '\r' + '\n';
                 printed.add(d.getmName("EN"));
             }
-            d.setStatus(DealProduct.DealProductStatus.SENT);
+            d.setStatus(DealProduct.DealProductStatus.SENT, getApplicationContext());
         }
 
         deal.setOrdersToSend(ordersToSend);
@@ -386,7 +386,7 @@ public class DealActivity extends BaseActivity {
         this.runOnUiThread(new Runnable() {
             public void run() {
                 EditText comment = (EditText)findViewById(R.id.dealActivityCommentEditText);
-                deal.setDealComment(comment.getText().toString());
+                deal.setDealComment(comment.getText().toString(), getApplicationContext());
             }
         });
     }
@@ -404,7 +404,7 @@ public class DealActivity extends BaseActivity {
                 error.yes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        deal.close();
+                        deal.close(getApplicationContext());
                         error.dismiss();
                         sendCloseDeal();
                         finish();
@@ -461,7 +461,7 @@ public class DealActivity extends BaseActivity {
                 dealClose += d.getmName("EN") + '\t' + count + '\r' + '\n';
                 printed.add(d.getmName("EN"));
             }
-            d.setStatus(DealProduct.DealProductStatus.SENT);
+            d.setStatus(DealProduct.DealProductStatus.SENT,getApplicationContext());
         }
 
         dealClose+="---- Total =  " + deal.getTotal() + '\r' + '\n';

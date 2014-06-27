@@ -25,7 +25,7 @@ public class ProductsCategoriesProvider {
     private static String TAG = "ProductsCategoriesProvider";
 
     private String[] mAllColumns = {
-            DatabaseHelper.TABLE_PRODUCT_CATEGORY_ID, DatabaseHelper.TABLE_PRODUCT_GROUP_ID, DatabaseHelper.TABLE_PRODUCT_CATEGORY_NAME,
+            DatabaseHelper.TABLE_PRODUCT_CATEGORY_ID, DatabaseHelper.TABLE_PRODUCT_CATEGORY_GROUP_ID, DatabaseHelper.TABLE_PRODUCT_CATEGORY_NAME,
             DatabaseHelper.TABLE_PRODUCT_CATEGORY_NAME_AR, DatabaseHelper.TABLE_PRODUCT_CATEGORY_PIC_NAME};
 
     private DatabaseHelper mDbHelper;
@@ -131,7 +131,7 @@ public class ProductsCategoriesProvider {
         try {
             db = mDbHelper.getReadableDatabase();
             cursor = db.query(DatabaseHelper.TABLE_PRODUCTS_CATEGORIES, mAllColumns,
-                    DatabaseHelper.TABLE_PRODUCT_GROUP_ID + "=?"
+                    DatabaseHelper.TABLE_PRODUCT_CATEGORY_GROUP_ID + "=?"
                     ,new String[]{groupId}, null, null, null, null);
         } catch (NullPointerException e) {
             if (AlwarshaApp.DEBUG)
@@ -142,7 +142,7 @@ public class ProductsCategoriesProvider {
                 ProductCategory product_cat = null;
                 int db_id = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.TABLE_PRODUCT_CATEGORY_ID));
 
-                int db_group_id = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.TABLE_PRODUCT_GROUP_ID));
+                int db_group_id = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.TABLE_PRODUCT_CATEGORY_GROUP_ID));
 
                 String db_name_ar = cursor.getString(cursor.getColumnIndex(DatabaseHelper.TABLE_PRODUCT_CATEGORY_NAME_AR));
 

@@ -200,6 +200,7 @@ public class MainActivity extends BaseActivity {
                             error.show();
                         }else{
                             sendDataBaseByMail();
+                            finish();
                         }
                        // finish();
                     }
@@ -208,7 +209,6 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         error.dismiss();
-                        finish();
                     }
                 });
             }

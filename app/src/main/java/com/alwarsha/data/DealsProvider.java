@@ -141,7 +141,7 @@ public class DealsProvider {
         cv.put(DatabaseHelper.TABLE_DEAL_COMMENT, deal.getComment());
 
         write_db = mDbHelper.getWritableDatabase();
-        long i  = write_db.update(DatabaseHelper.TABLE_DEALS, cv, "deal_id "+"="+String.valueOf(deal.getId()),null);
+        long i  = write_db.update(DatabaseHelper.TABLE_DEALS, cv, DatabaseHelper.TABLE_DEAL_ID+"="+String.valueOf(deal.getId()),null);
         Log.d(TAG, "insert return value = " + i);
     }
 

@@ -43,7 +43,7 @@ public class MenuOneProductActivity extends BaseActivity {
                     TextView product = (TextView) v.findViewById(R.id.productId);
                     int productId = Integer.valueOf(product.getText().toString());
                     Product p = mProductsList.get(productId);
-                    DealProduct dp = new DealProduct(p, DealProduct.DealProductStatus.ORDERED);
+                    DealProduct dp = new DealProduct(p, DealProduct.DealProductStatus.ORDERED,MenuOneProductActivity.this);
                     DealsProvider deals_provider = DealsProvider.getInstace(getApplicationContext());
 
                     Deal open_deal = deals_provider.getOpenDealByName(mDealName);
@@ -81,7 +81,7 @@ public class MenuOneProductActivity extends BaseActivity {
                             TextView product = (TextView) v.findViewById(R.id.productId);
                             int productId = Integer.valueOf(product.getText().toString());
                             Product p = mProductsList.get(productId);
-                            DealProduct dp = new DealProduct(p, DealProduct.DealProductStatus.ORDERED);
+                            DealProduct dp = new DealProduct(p, DealProduct.DealProductStatus.ORDERED,MenuOneProductActivity.this);
                             dp.setComment(input.getText().toString());
                             DealsProvider deals_provider = DealsProvider.getInstace(getApplicationContext());
 

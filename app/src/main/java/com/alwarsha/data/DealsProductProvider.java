@@ -105,7 +105,7 @@ public class DealsProductProvider {
         cv.put(DatabaseHelper.TABLE_DEALS_PRODUCT_PRODUCT_ID, deal_product.getmId());
         cv.put(DatabaseHelper.TABLE_DEALS_PRODUCT_STATUS, deal_product.getStatus().toString());
 
-        long i  = db.update(DatabaseHelper.TABLE_DEALS_PRODUCT, cv, DatabaseHelper.TABLE_DEALS_PRODUCT_ID + "="+String.valueOf(deal_product.getId()),null);
+        long i  = db.update(DatabaseHelper.TABLE_DEALS_PRODUCT, cv, DatabaseHelper.TABLE_DEALS_PRODUCT_ID +"=?",new String[]{String.valueOf(deal_product.getId())} );
         Log.d(TAG, "insert return value = " + i);
 
         db.close();
@@ -141,9 +141,9 @@ public class DealsProductProvider {
                 Product p = pp.getProduct(product_id);
                 if(p != null)
                 {
-                    DealProduct dp = new DealProduct(p,status);
+                    DealProduct dp = new DealProduct(p,status,mContext);
                     dp.setDeal_id(deal_id);
-                    dp.setId(product_id);
+                    dp.setId(deal_product_id);
                     deal_products.add(dp);
                 }
                 cursor.moveToNext();

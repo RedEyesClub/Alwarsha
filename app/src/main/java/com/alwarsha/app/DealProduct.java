@@ -61,11 +61,10 @@ public class DealProduct extends Product {
         mStatus = DealProductStatus.ORDERED;
     }
 
-    public DealProduct(Product p,DealProductStatus status) {
+    public DealProduct(Product p,DealProductStatus status,Context context) {
         super(p);
-        mStatus = status;
-        this.id = id;
-        this.deal_id = deal_id;
+        this.mStatus = status;
+        saveInDB(context);
     }
 
     public DealProductStatus getStatus() {

@@ -457,7 +457,7 @@ public class DealActivity extends BaseActivity {
     }
 
     private void sendCloseDeal() {
-        if (deal.getmProducts().size() == 0)
+        if (deal== null || deal.getmProducts() == null || deal.getmProducts().size() == 0)
             return;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy - MM - dd HH:mm");
         String currentDateandTime = sdf.format(new Date());
@@ -521,7 +521,7 @@ public class DealActivity extends BaseActivity {
                 arg0[0] += "\n" + "\n" + "\n" + "\u001b" + "\u0069";
                 int textLength = arg0[0].length();
 
-                Socket client = new Socket("192.168.1.19", 9100);
+                Socket client = new Socket("192.168.1.47", 9100);
 
                 byte[] mybytearray = new byte[textLength];
 

@@ -38,19 +38,26 @@ public class MainActivity extends BaseActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        GridView gridview = (GridView) findViewById(R.id.gridView);
 
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        mImageAdapter = new ImageAdapter(this);
+        GridView gridview = (GridView) findViewById(R.id.gridView);
         gridview.setAdapter(mImageAdapter);
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                if(position < mImageAdapter.getmTablesPictures().size() ){
-                    Intent i = new Intent(MainActivity.this,DealActivity.class);
+                if (position < mImageAdapter.getmTablesPictures().size()) {
+                    Intent i = new Intent(MainActivity.this, DealActivity.class);
                     i.putExtra("dealName", mImageAdapter.getDealName(position));
                     startActivity(i);
 
-                }else if(position == mImageAdapter.getmTablesPictures().size() ){
+                } else if (position == mImageAdapter.getmTablesPictures().size()) {
                     AlertDialog.Builder editalert = new AlertDialog.Builder(MainActivity.this);
 
                     editalert.setTitle("Insert new deal");
@@ -67,18 +74,19 @@ public class MainActivity extends BaseActivity {
 
                     editalert.setPositiveButton("Add", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            String deal_name = input.getText().toString();
-                            if(deal_name.substring(0,1).matches("[0-9]")){
+                            String deal_name ="";
+                            if(input!= null && input.getText() != null)
+                                deal_name = input.getText().toString();
+                            if (deal_name.length() == 0 || deal_name.substring(0, 1).matches("[0-9]"))  {
                                 final AlertDialog.Builder BadNameAlert = new AlertDialog.Builder(MainActivity.this);
                                 BadNameAlert.setTitle("Bad Deal Name!");
                                 BadNameAlert.setMessage("Deal Name cannot start with digit");
-                                BadNameAlert.setPositiveButton("OK",new DialogInterface.OnClickListener(){
+                                BadNameAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
                                         dialog.dismiss();
                                     }
                                 });
-                            }
-                            else{
+                            } else {
                                 mImageAdapter.addDeal(deal_name);
                                 mImageAdapter.notifyDataSetChanged();
                             }
@@ -87,21 +95,17 @@ public class MainActivity extends BaseActivity {
 
 
                     editalert.show();
-                }else if((position == mImageAdapter.getmTablesPictures().size() + 1)){
-                    Intent i = new Intent(MainActivity.this,MenuMainActivity.class);
+                } else if ((position == mImageAdapter.getmTablesPictures().size() + 1)) {
+                    Intent i = new Intent(MainActivity.this, MenuMainActivity.class);
                     startActivity(i);
-                }else if((position == mImageAdapter.getmTablesPictures().size() + 2)){
-                       Intent i= new Intent(MainActivity.this,ClosedDealsActivity.class);
-                       startActivity(i);
+                } else if ((position == mImageAdapter.getmTablesPictures().size() + 2)) {
+                    Intent i = new Intent(MainActivity.this, ClosedDealsActivity.class);
+                    startActivity(i);
                 }
 
             }
 
         });
-    }
-
-    @Override
-    protected void onResume() {
         super.onResume();
     }
 

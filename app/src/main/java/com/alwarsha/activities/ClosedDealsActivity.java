@@ -109,7 +109,7 @@ public class ClosedDealsActivity extends Activity {
                 arg0[0] += "\n" + "\n" + "\n" + "\u001b"+"\u0069";
                 int textLength = arg0[0].length();
 
-                Socket client = new Socket("192.168.1.19", 9100);
+                Socket client = new Socket("192.168.1.47", 9100);
 
                 byte[] mybytearray = new byte[textLength];
 

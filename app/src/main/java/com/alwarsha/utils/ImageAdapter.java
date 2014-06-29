@@ -82,18 +82,25 @@ public class ImageAdapter extends BaseAdapter {
         ImageView tableImage =(ImageView)returnedValue.findViewById(R.id.mainScreenOneItemImageView);
 
         if(position < mTablesPictures.size()){
+            DealsProvider provider = DealsProvider.getInstace(mContext);
+            Deal d  = provider.getOpenDealByName(mTablesPictures.get(position));
             tableTextView.setText("Table " + mTablesPictures.get(position));
             tableTextView.setBackgroundColor(0xffff00);
-            tableImage.setImageResource(R.drawable.table);
+            if(d == null)
+                tableImage.setImageResource(R.drawable.table);
+            else
+                tableImage.setImageResource(R.drawable.open_table);
         }else if (position == mTablesPictures.size()){
             tableTextView.setText("Add deal");
             tableTextView.setBackgroundColor(0xffff00);
             tableImage.setImageResource(mSpecialThumps[0]);
         }else if(position == mTablesPictures.size() + 1){
             tableTextView.setText("Menu");
+            tableTextView.setBackgroundColor(0xffff00);
             tableImage.setImageResource(mSpecialThumps[1]);
         }else if(position == mTablesPictures.size() + 2){
             tableTextView.setText("Closed Deals");
+            tableTextView.setBackgroundColor(0xffff00);
             tableImage.setImageResource(mSpecialThumps[2]);
         }
 

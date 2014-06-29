@@ -92,9 +92,17 @@
             android:id="@+id/dealActivityDiscountEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.5"
             android:gravity="center"
             android:hint="Discount%"/>
+        <Button
+            android:id="@+id/dealActivitySetDiscountButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="set"
+            android:gravity="center"
+            android:onClick="sedDiscountClick"/>
         <TextView
             android:id="@+id/totalDisTextView"
             android:layout_width="0dp"

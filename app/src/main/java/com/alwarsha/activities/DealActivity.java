@@ -291,6 +291,16 @@ public class DealActivity extends BaseActivity {
         super.onResume();
     }
 
+    public void sedDiscountClick(View discountButton){
+        try {
+            int discountPercent = Integer.valueOf(mDiscountEdtitText.getText().toString());
+            deal.setTotalDiscount(Float.valueOf(discountPercent),DealActivity.this);
+            String total = "Toatal Discount = " + String.valueOf(deal.getTotal() - deal.getTotal() * discountPercent / 100);
+            mTotalDisTextView.setText(total);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     private void initProductsHashMap() {
         if (mProductsCounter.size() > 0)
             mProductsCounter.clear();

@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:background="#AAFFFFFF"
         android:hint="@string/username"
-        android:text="Hadeel"/>
+        android:text=""/>
 
     <EditText
         android:id="@+id/password_editText"
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:background="#AAFFFFFF"
         android:hint="@string/password"
-        android:text="456"/>
+        android:text=""/>
 
     <Button
         android:layout_width="match_parent"

@@ -77,6 +77,8 @@ public class ClosedDealsActivity extends Activity {
     }
 
     private void sendCloseDeal(Deal deal){
+        if (deal== null || deal.getmProducts() == null || deal.getmProducts().size() == 0)
+            return;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy - MM - dd HH:mm");
         String currentDateandTime = sdf.format(new Date());
         LinkedHashMap<Integer, Integer> sentProductsCounter = new LinkedHashMap<Integer, Integer>();

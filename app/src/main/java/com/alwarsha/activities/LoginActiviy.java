@@ -87,6 +87,7 @@ public class LoginActiviy extends BaseActivity  {
                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             Intent i = new Intent(LoginActiviy.this,MainActivity.class);
+                            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(i);
 
                             dialog.dismiss();

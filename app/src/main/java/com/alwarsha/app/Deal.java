@@ -127,7 +127,7 @@ public class Deal {
     public boolean addProduct(DealProduct product, Context context) {
 
         DealsProductProvider dpp = DealsProductProvider.getInstace(context);
-        product.setDeal_id(this.id);
+        product.setDeal_id(this.id,context);
         product.setId(dpp.insertNewDealProduct(product));
         if(mProducts == null){
             mProducts = new ArrayList<DealProduct>();
@@ -165,7 +165,10 @@ public class Deal {
         DealProduct.DealProductStatus ret_val = dealProduct.getStatus();
 
         dpp.deleteDealProduct(dealProduct.getId());
+        this.total -= dealProduct.getmPrice();
+
         mProducts.remove(dealProduct);
+        saveInDB(context);
         return ret_val;
     }
 

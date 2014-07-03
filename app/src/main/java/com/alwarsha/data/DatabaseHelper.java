@@ -76,6 +76,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_DEALS_PRODUCT_PRODUCT_ID = "deals_product_product_id";
     public static final String TABLE_DEALS_PRODUCT_STATUS = "deals_product_status";
     public static final String TABLE_DEALS_PRODUCT_DEAL_ID = "deals_product_deal_id";
+    public static final String TABLE_DEALS_PRODUCT_COMMENT = "comment";
 
 
 

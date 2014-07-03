@@ -82,6 +82,7 @@ public class ClosedDealsActivity extends Activity {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy - MM - dd HH:mm");
         String currentDateandTime = sdf.format(new Date());
         LinkedHashMap<Integer, Integer> sentProductsCounter = new LinkedHashMap<Integer, Integer>();
+        float total =0;
 
         String dealClose = "+++++++++++++++++++++++++++++++" + '\r'  + '\n';
         dealClose += "Close deal" + '\r'  + '\n';
@@ -89,16 +90,16 @@ public class ClosedDealsActivity extends Activity {
         dealClose += "Table number : " + deal.getName() + '\r' + '\n';
         dealClose += AlwarshaApp.m.getName() + '\r' + '\n';
         ArrayList<String> printed = new ArrayList<String>();
+        total =0;
         for (DealProduct d : deal.getmProducts()) {
-            dealClose += d.getmName("EN") + "\n";
+            dealClose += d.getmName("EN") +  "  "  + d.getmPrice()  +" NIS"+ "\n";
+            total+=d.getmPrice();
         }
 
-        dealClose+="---- Total =  " + deal.getTotal() + '\r' + '\n';
-        dealClose+="---- Total after discount =  " + String.valueOf(deal.getTotal() - deal.getTotal_discount()) + '\r' + '\n';
-
+        dealClose += "---- Total =  " + total + '\r' + '\n';
+        dealClose += "---- Total after discount =  " + String.valueOf(total - total * deal.getTotal_discount() / 100) + '\r' + '\n';
 
         new sendToPrinterTask().execute(dealClose);
-
     }
 
     private class sendToPrinterTask extends

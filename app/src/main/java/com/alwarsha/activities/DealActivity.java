@@ -58,15 +58,40 @@ public class DealActivity extends BaseActivity {
     TextView mTotalTextView;
     TextView mTotalDisTextView;
     ListView mProductListView;
+    private boolean divideDealFlag = false;
     LinkedHashMap<Integer, Integer> mProductsCounter = new LinkedHashMap<Integer, Integer>();
     LinkedHashMap<Integer, Integer> mSentProductsCounter = new LinkedHashMap<Integer, Integer>();
     private EditText mDiscountEdtitText;
+    private Deal mPartDeal;
 
     private BaseAdapter mAdapter = new BaseAdapter() {
         private View.OnClickListener mOnButtonClicked = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final TextView productIdView = (TextView) v.findViewById(R.id.productId);
+                if(divideDealFlag){
+                    for (DealProduct d : deal.getmProducts()) {
+                        String productId = productIdView.getText().toString();
+                        if (Integer.valueOf(productId) == d.getmId()) {
+                            if(mPartDeal !=null){
+                                d.setDeal_id(mPartDeal.getId(),DealActivity.this);
+                                mPartDeal.addProduct(d, getApplicationContext());
+                            }
+                            DealProduct.DealProductStatus status = deal.delete_product(d.getmId(), getApplicationContext());
+                            initProductsHashMap();
+                            mAdapter.notifyDataSetChanged();
+                            mTotalTextView.setText("Total = " + deal.getTotal());
+                            mTotalDisTextView.setText("Total Dis = " + deal.getTotal_discount());
+                            if (deal.getComment() != null) {
+                                mCommentTextView.setText(deal.getComment());
+                            }
+                            return;
+
+                        }
+                    }
+
+                }
+
                 new AlertDialog.Builder(DealActivity.this)
                         .setTitle("Delete product")
                         .setMessage("Are you sure you want to delete product?")
@@ -76,15 +101,21 @@ public class DealActivity extends BaseActivity {
                                     String productId = productIdView.getText().toString();
                                     if (Integer.valueOf(productId) == d.getmId()) {
 
-                                       // if (d.getStatus() == DealProduct.DealProductStatus.ORDERED) {
-                                            DealProduct.DealProductStatus status = deal.delete_product(d.getmId(), getApplicationContext());
-                                            if(status == DealProduct.DealProductStatus.SENT){
-                                                sendRemoveProduct(d.getmName("EN"));
-                                            }
-                                            initProductsHashMap();
-                                            mAdapter.notifyDataSetChanged();
-                                            break;
-                                      //  }
+                                        // if (d.getStatus() == DealProduct.DealProductStatus.ORDERED) {
+                                        DealProduct.DealProductStatus status = deal.delete_product(d.getmId(), getApplicationContext());
+                                        if (status == DealProduct.DealProductStatus.SENT) {
+                                            sendRemoveProduct(d.getmName("EN"));
+                                        }
+
+                                        initProductsHashMap();
+                                        mAdapter.notifyDataSetChanged();
+                                        mTotalTextView.setText("Total = " + deal.getTotal());
+                                        mTotalDisTextView.setText("Total Dis = " + deal.getTotal_discount());
+                                        if (deal.getComment() != null) {
+                                            mCommentTextView.setText(deal.getComment());
+                                        }
+                                        break;
+                                        //  }
 
                                     }
                                 }
@@ -235,7 +266,7 @@ public class DealActivity extends BaseActivity {
                 } else {
                     try {
                         int discountPercent = Integer.valueOf(mDiscountEdtitText.getText().toString());
-                        deal.setTotalDiscount(Float.valueOf(discountPercent),DealActivity.this);
+                        deal.setTotalDiscount(Float.valueOf(discountPercent), DealActivity.this);
                         String total = "Toatal Discount = " + String.valueOf(deal.getTotal() - deal.getTotal() * discountPercent / 100);
                         mTotalDisTextView.setText(total);
                     } catch (Exception e) {
@@ -291,16 +322,17 @@ public class DealActivity extends BaseActivity {
         super.onResume();
     }
 
-    public void sedDiscountClick(View discountButton){
+    public void sedDiscountClick(View discountButton) {
         try {
             int discountPercent = Integer.valueOf(mDiscountEdtitText.getText().toString());
-            deal.setTotalDiscount(Float.valueOf(discountPercent),DealActivity.this);
+            deal.setTotalDiscount(Float.valueOf(discountPercent), DealActivity.this);
             String total = "Toatal Discount = " + String.valueOf(deal.getTotal() - deal.getTotal() * discountPercent / 100);
             mTotalDisTextView.setText(total);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     private void initProductsHashMap() {
         if (mProductsCounter.size() > 0)
             mProductsCounter.clear();
@@ -380,7 +412,7 @@ public class DealActivity extends BaseActivity {
                     productCounter = 1;
                 }
                 sendBarBroducts.put(dd.getmName("EN"), productCounter);
-                dd.setStatus(DealProduct.DealProductStatus.SENT,getApplicationContext());
+                dd.setStatus(DealProduct.DealProductStatus.SENT, getApplicationContext());
             }
         }
 
@@ -394,12 +426,12 @@ public class DealActivity extends BaseActivity {
                     productCounter = 1;
                 }
                 sendKitchenBroducts.put(dd.getmName("EN"), productCounter);
-                dd.setStatus(DealProduct.DealProductStatus.SENT,getApplicationContext());
+                dd.setStatus(DealProduct.DealProductStatus.SENT, getApplicationContext());
             }
         }
 
-        String barOrderTosend="";
-        String kitchenOrderTosend =ordersToSend;
+        String barOrderTosend = "";
+        String kitchenOrderTosend = ordersToSend;
         for (Map.Entry<String, Integer> entry : sendBarBroducts.entrySet()) {
             String key = entry.getKey();
             Integer value = entry.getValue();
@@ -430,7 +462,7 @@ public class DealActivity extends BaseActivity {
     public void setDealComment(View SetCommentButton) {
         this.runOnUiThread(new Runnable() {
             public void run() {
-                EditText comment = (EditText)findViewById(R.id.dealActivityCommentEditText);
+                EditText comment = (EditText) findViewById(R.id.dealActivityCommentEditText);
                 deal.setDealComment(comment.getText().toString(), getApplicationContext());
             }
         });
@@ -467,21 +499,24 @@ public class DealActivity extends BaseActivity {
     }
 
     private void sendCloseDeal() {
-        if (deal== null || deal.getmProducts() == null || deal.getmProducts().size() == 0)
+        if (deal == null || deal.getmProducts() == null || deal.getmProducts().size() == 0)
             return;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy - MM - dd HH:mm");
         String currentDateandTime = sdf.format(new Date());
         LinkedHashMap<Integer, Integer> sentProductsCounter = new LinkedHashMap<Integer, Integer>();
+        float total;
 
         String dealClose = "+++++++++++++++++++++++++++++++" + '\r' + '\n';
         dealClose += "Close deal" + '\r' + '\n';
         dealClose += currentDateandTime + '\r' + '\n' + '\n';
         dealClose += "Table number : " + mDealNameId + '\r' + '\n';
         dealClose += AlwarshaApp.m.getName() + '\r' + '\n';
+        total = 0;
         for (DealProduct d : deal.getmProducts()) {
-            dealClose += d.getmName("EN") + "\n";
+            dealClose += d.getmName("EN") + "  " + d.getmPrice() + " NIS" + "\n";
+            total += d.getmPrice();
         }
-     //   ArrayList<String> printed = new ArrayList<String>();
+        //   ArrayList<String> printed = new ArrayList<String>();
 //        for (DealProduct d : deal.getmProducts()) {
 //            if (d.getStatus() == DealProduct.DealProductStatus.SENT) {
 //                for (DealProduct dd : deal.getmProducts()) {
@@ -514,8 +549,8 @@ public class DealActivity extends BaseActivity {
 //            d.setStatus(DealProduct.DealProductStatus.SENT,getApplicationContext());
 //        }
 
-        dealClose += "---- Total =  " + deal.getTotal() + '\r' + '\n';
-        dealClose += "---- Total after discount =  " + String.valueOf(deal.getTotal() - deal.getTotal() * deal.getTotal_discount() / 100) + '\r' + '\n';
+        dealClose += "---- Total =  " + total + '\r' + '\n';
+        dealClose += "---- Total after discount =  " + String.valueOf(total - total * deal.getTotal_discount() / 100) + '\r' + '\n';
 
 
         new sendToPrinterTask().execute(dealClose);
@@ -562,5 +597,50 @@ public class DealActivity extends BaseActivity {
         protected void onPostExecute(Void result) {
 
         }
+    }
+
+    public void closePartClicked(View v){
+        divideDealFlag = true;
+        AlertDialog.Builder editalert = new AlertDialog.Builder(DealActivity.this);
+
+        editalert.setTitle("Insert new deal");
+        editalert.setMessage("Enter deal name");
+
+
+        final EditText input = new EditText(DealActivity.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        input.setHeight(100);
+        editalert.setView(input);
+
+        editalert.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String dealName ="";
+                if(input!= null && input.getText() != null)
+                    dealName = input.getText().toString();
+                if (dealName.length() == 0 || dealName.substring(0, 1).matches("[0-9]"))  {
+                    final AlertDialog.Builder BadNameAlert = new AlertDialog.Builder(DealActivity.this);
+                    BadNameAlert.setTitle("Bad Deal Name!");
+                    BadNameAlert.setMessage("Deal Name cannot start with digit");
+                    BadNameAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            dialog.dismiss();
+                        }
+                    });
+                } else {
+                    try{
+                        mPartDeal = new Deal(dealName,DealActivity.this);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        });
+
+        editalert.show();
+
     }
 }

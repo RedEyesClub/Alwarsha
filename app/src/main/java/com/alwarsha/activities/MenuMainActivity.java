@@ -39,6 +39,7 @@ public class MenuMainActivity extends BaseActivity {
                    i.putExtra("dealId",mDealNameId);
                }
                i.putExtra("GroupId",groupId);
+               i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                startActivity(i);
 
            }

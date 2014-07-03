@@ -37,13 +37,15 @@ public class DealProduct extends Product {
     private DealProductStatus mStatus;
     private int id;
     private int deal_id;
+    private String mComment;
 
     public int getDeal_id() {
         return deal_id;
     }
 
-    public void setDeal_id(int deal_id) {
+    public void setDeal_id(int deal_id,Context context) {
         this.deal_id = deal_id;
+        saveInDB(context);
     }
 
     public int getId() {
@@ -54,7 +56,15 @@ public class DealProduct extends Product {
         this.id = id;
     }
 
-    private String mComment;
+    public String getComment() {
+        return mComment;
+    }
+
+    public void setComment(String comment,Context context) {
+        this.mComment = comment;
+        saveInDB(context);
+    }
+
 
     public DealProduct(int id, String name,int categoryId, String pictureName, float price,String language) {
       super(id,name,categoryId,pictureName,price,language);
@@ -76,15 +86,6 @@ public class DealProduct extends Product {
         saveInDB(context);
     }
 
-
-
-    public String getComment() {
-        return mComment;
-    }
-
-    public void setComment(String comment) {
-        this.mComment = comment;
-    }
 
     private void saveInDB(Context context){
         DealsProductProvider dpp = DealsProductProvider.getInstace(context);

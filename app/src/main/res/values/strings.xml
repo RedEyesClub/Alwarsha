@@ -16,5 +16,6 @@
     <string name="orders">Orders</string>
     <string name="title_activity_base">BaseActivity</string>
     <string name="title_activity_closed_deals">ClosedDealsActivity</string>
+    <string name="title_activity_close_part_of_deal">ClosePartOfDealActivity</string>
 
 </resources>

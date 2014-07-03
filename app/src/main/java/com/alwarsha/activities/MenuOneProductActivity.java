@@ -1,9 +1,15 @@
 package com.alwarsha.activities;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.LayoutInflater;
+import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -18,6 +24,7 @@ import com.alwarsha.app.AlwarshaApp;
 import com.alwarsha.app.Deal;
 import com.alwarsha.app.DealProduct;
 import com.alwarsha.app.Product;
+
 import com.alwarsha.app.R;
 import com.alwarsha.data.DealsProvider;
 import com.alwarsha.data.ProductsProvider;
@@ -43,6 +50,10 @@ public class MenuOneProductActivity extends BaseActivity {
                     TextView product = (TextView) v.findViewById(R.id.productId);
                     int productId = Integer.valueOf(product.getText().toString());
                     Product p = mProductsList.get(productId);
+                    Vibrator vibrate = (Vibrator) MenuOneProductActivity.this.getSystemService(Context.VIBRATOR_SERVICE);
+                    // Vibrate for 500 milliseconds
+                    vibrate.vibrate(300);
+                    v.playSoundEffect(SoundEffectConstants.CLICK);
                     DealProduct dp = new DealProduct(p, DealProduct.DealProductStatus.ORDERED,MenuOneProductActivity.this);
                     DealsProvider deals_provider = DealsProvider.getInstace(getApplicationContext());
 
@@ -69,8 +80,8 @@ public class MenuOneProductActivity extends BaseActivity {
 
                 final EditText input = new EditText(MenuOneProductActivity.this);
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.FILL_PARENT,
-                        LinearLayout.LayoutParams.FILL_PARENT);
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
                 input.setLayoutParams(lp);
                 input.setHeight(100);
                 commentAlert.setView(input);
@@ -82,7 +93,7 @@ public class MenuOneProductActivity extends BaseActivity {
                             int productId = Integer.valueOf(product.getText().toString());
                             Product p = mProductsList.get(productId);
                             DealProduct dp = new DealProduct(p, DealProduct.DealProductStatus.ORDERED,MenuOneProductActivity.this);
-                            dp.setComment(input.getText().toString());
+                            dp.setComment(input.getText().toString(),MenuOneProductActivity.this);
                             DealsProvider deals_provider = DealsProvider.getInstace(getApplicationContext());
 
                             Deal open_deal = deals_provider.getOpenDealByName(mDealName);
@@ -130,8 +141,8 @@ public class MenuOneProductActivity extends BaseActivity {
             View returnedValue = null;
             if (position == mProductsList.size()) {
                 returnedValue = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_item, null);
-                TextView productIdTextView = (TextView) returnedValue.findViewById(R.id.productId);
-              //  productIdTextView.setText(String.valueOf(position));
+                TextView productPriceTextView = (TextView)returnedValue.findViewById(R.id.producrOneItemPriceLoTextView);
+                productPriceTextView.setVisibility(View.GONE);
                 TextView productName = (TextView) returnedValue.findViewById(R.id.producrOneItemNameTextView);
                 //TODO:Farid,  need to know wich language
                 productName.setText("Add new product");
@@ -221,6 +232,11 @@ public class MenuOneProductActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_one_product);
+
+    }
+
+    @Override
+    protected void onResume() {
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
@@ -237,11 +253,31 @@ public class MenuOneProductActivity extends BaseActivity {
             mProductsList = provider.getProductsCategory(String.valueOf(mCategoryId));
         }
         drinksListView.setAdapter(mAdapter);
+        super.onResume();
     }
 
+    @TargetApi(Build.VERSION_CODES.ECLAIR)
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    public void mainMenuClicked(View mainMenuButton){
+        Intent i = new Intent(MenuOneProductActivity.this,MenuMainActivity.class);
+        i.putExtra("dealId", mDealName);
+        i.putExtra("sender",MenuOneProductActivity.class.getSimpleName());
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
+        finish();
+    }
+
+    public void mainScreenClicked(View mainScreenButton){
+        Intent i = new Intent(MenuOneProductActivity.this,MainActivity.class);
+        i.putExtra("dealId", mDealName);
+        i.putExtra("sender",MenuOneProductActivity.class.getSimpleName());
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
+        finish();
     }
 
 }

@@ -85,6 +85,7 @@ public class MenuCategoriesActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(MenuCategoriesActivity.this,MenuOneProductActivity.class);
                 intent.putExtra("id",categoriesList.get(i).getmId());
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 if(mSender!=null){
                     intent.putExtra("sender", mSender);
                     intent.putExtra("dealId", mDealNameId);

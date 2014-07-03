@@ -13,8 +13,30 @@
         android:layout_height="wrap_content"
         android:id="@+id/oneProductListView"
         android:scrollbars="none"
+        android:layout_above="@+id/activityMenuOneProductMainMenuButtoonsLayout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true" />
+    <LinearLayout
+        android:id="@+id/activityMenuOneProductMainMenuButtoonsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/activityMenuOneProductMainMenuButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Main menu"
+            android:onClick="mainMenuClicked"/>
+        <Button
+            android:id="@+id/activityMenuOneProductMainScreenButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Main screen"
+            android:onClick="mainScreenClicked"/>
+        </LinearLayout>
 
 </RelativeLayout>

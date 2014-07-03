@@ -25,7 +25,8 @@ public class DealsProductProvider {
     private String[] mAllColumns = {
             DatabaseHelper.TABLE_DEALS_PRODUCT_ID,
             DatabaseHelper.TABLE_DEALS_PRODUCT_PRODUCT_ID, DatabaseHelper.TABLE_DEALS_PRODUCT_STATUS,
-            DatabaseHelper.TABLE_DEALS_PRODUCT_DEAL_ID};
+            DatabaseHelper.TABLE_DEALS_PRODUCT_DEAL_ID,
+            DatabaseHelper.TABLE_DEALS_PRODUCT_COMMENT};
 
     private DatabaseHelper mDbHelper;
     private Context mContext;
@@ -104,6 +105,9 @@ public class DealsProductProvider {
         cv.put(DatabaseHelper.TABLE_DEALS_PRODUCT_DEAL_ID, deal_product.getDeal_id());
         cv.put(DatabaseHelper.TABLE_DEALS_PRODUCT_PRODUCT_ID, deal_product.getmId());
         cv.put(DatabaseHelper.TABLE_DEALS_PRODUCT_STATUS, deal_product.getStatus().toString());
+        if(deal_product.getComment() != null){
+            cv.put(DatabaseHelper.TABLE_DEALS_PRODUCT_COMMENT,deal_product.getComment());
+        }
 
         long i  = db.update(DatabaseHelper.TABLE_DEALS_PRODUCT, cv, DatabaseHelper.TABLE_DEALS_PRODUCT_ID +"=?",new String[]{String.valueOf(deal_product.getId())} );
         Log.d(TAG, "insert return value = " + i);
@@ -142,7 +146,7 @@ public class DealsProductProvider {
                 if(p != null)
                 {
                     DealProduct dp = new DealProduct(p,status,mContext);
-                    dp.setDeal_id(deal_id);
+                    dp.setDeal_id(deal_id,mContext);
                     dp.setId(deal_product_id);
                     deal_products.add(dp);
                 }

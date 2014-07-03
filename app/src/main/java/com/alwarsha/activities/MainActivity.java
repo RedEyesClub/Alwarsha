@@ -32,7 +32,15 @@ import java.util.List;
 
 public class MainActivity extends BaseActivity {
 
-    ImageAdapter mImageAdapter = new ImageAdapter(this);
+    public ImageAdapter getmImageAdapter() {
+        return mImageAdapter;
+    }
+
+    public void setmImageAdapter(ImageAdapter mImageAdapter) {
+        this.mImageAdapter = mImageAdapter;
+    }
+
+    public ImageAdapter mImageAdapter = new ImageAdapter(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -55,6 +63,7 @@ public class MainActivity extends BaseActivity {
                 if (position < mImageAdapter.getmTablesPictures().size()) {
                     Intent i = new Intent(MainActivity.this, DealActivity.class);
                     i.putExtra("dealName", mImageAdapter.getDealName(position));
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
 
                 } else if (position == mImageAdapter.getmTablesPictures().size()) {
@@ -97,9 +106,11 @@ public class MainActivity extends BaseActivity {
                     editalert.show();
                 } else if ((position == mImageAdapter.getmTablesPictures().size() + 1)) {
                     Intent i = new Intent(MainActivity.this, MenuMainActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
                 } else if ((position == mImageAdapter.getmTablesPictures().size() + 2)) {
                     Intent i = new Intent(MainActivity.this, ClosedDealsActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
                 }
 
